@@ -157,11 +157,11 @@ class paymentView(APIView):
             'link': redirect_url
         },status=201)
    
-# class CartRegisterView(APIView):
+class callback(APIView):
  
-#     def post(self, request,format=None):
-         
-#         return Response({
-#             'status':status.HTTP_201_CREATED,
-#             "msg":'Cart Registered',
-#         },status=201)
+    def post(self, request,format=None):
+        print(request.data)
+        return Response({
+            'status':status.HTTP_201_CREATED,
+            "msg":'Cart Registered',
+        },status=201)
