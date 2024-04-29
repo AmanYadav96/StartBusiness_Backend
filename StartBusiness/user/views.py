@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
+from cart.models import Cart
 from user.serializers import UserLoginSerializer, UserSerializer,UserOtpSerializer,ForgetPasswordSerializer
 from rest_framework import status
 from rest_framework.response import Response
@@ -54,6 +55,9 @@ class UserRegisterView(GenericAPIView):
         serializer.is_valid(raise_exception = True)
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
         serializer.save()
+        if serializer.data['user_role'] == 'Customer':
+            cart = Cart.objects.create(user_id=serializer.data['user_id'])
+            cart.save()
         id = request.data.get('user_email')
         user_id = otp_generator(id)
         return Response({

@@ -1,27 +1,33 @@
-from cart.filter import CartFilter
+from .serializers import CartItemSerializer, CartViewSerializer
+from user.models import User
+from product.models import Product
 from cart.models import Cart
-from cart.serializers import CartSerializer,CartViewSerializer,CartUpdateSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import GenericAPIView , ListAPIView
 from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Cart, CartItem
 
 
-class CartRegisterView(GenericAPIView):
-    serializer_class = CartSerializer
-    def post(self, request,format=None):
-        serializer = CartSerializer(data=request.data)
+class CartAddView(GenericAPIView):
+    serializer_class = CartItemSerializer 
+    def post(self, request):
+        serializer = CartItemSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
-            'status':status.HTTP_201_CREATED,
-            "msg":'Cart Registered',
-        },status=201)
+                'status':status.HTTP_201_CREATED,
+                'message':'Cart item created successfully',
+                'data':serializer.data
+            },status=201)
+
 
 class CartView(ListAPIView):
-   queryset = Cart.objects.all()
+   queryset = CartItem.objects.all()
    serializer_class = CartViewSerializer
-   filterset_class = CartFilter
    
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
@@ -41,7 +47,7 @@ class CartViewById(APIView):
     def get(self,request, input = None,format=None):
         _id = input
         try:
-            cart = Cart.objects.get(cart_id=_id)
+            cart = CartItem.objects.get(cart_item_id=_id)
             serializer = CartViewSerializer(cart)
             return Response({
                 'status':status.HTTP_200_OK,
@@ -57,12 +63,12 @@ class CartViewById(APIView):
        
         
 class CartUpdateView(GenericAPIView):
-    serializer_class = CartUpdateSerializer
+    serializer_class = CartItemSerializer
     def patch(self, request, input, format=None):
         _id = input
         try:
-           cart = Cart.objects.get(cart_id=_id)
-           serializer = CartUpdateSerializer(cart, data=request.data, partial=True)
+           cart = CartItem.objects.get(cart_item_id=_id)
+           serializer = CartItemSerializer(cart, data=request.data, partial=True)
            serializer.is_valid(raise_exception=True)
            serializer.save()
            return Response({
@@ -81,7 +87,7 @@ class CartDeleteView(APIView):
     def delete(self, request, input):
         _id = input
         try:
-            cart = Cart.objects.get(cart_id=_id)
+            cart = Cart.objects.get(cart_item_id=_id)
             cart.delete()
             return Response({
             'status': status.HTTP_200_OK,
