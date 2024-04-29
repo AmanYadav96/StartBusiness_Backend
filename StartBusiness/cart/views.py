@@ -148,7 +148,7 @@ class paymentView(APIView):
      result = response.json()
     # Assuming result['link_url'] exists
      redirect_url = result['link_url']
-     print("Redirect to:", redirect_url)
+    #  print("Redirect to:", redirect_url)
     else:
        print("Failed to create payment link:", response.status_code, response.text)
     return Response({
@@ -157,3 +157,11 @@ class paymentView(APIView):
             'link': redirect_url
         },status=201)
    
+# class CartRegisterView(APIView):
+ 
+#     def post(self, request,format=None):
+         
+#         return Response({
+#             'status':status.HTTP_201_CREATED,
+#             "msg":'Cart Registered',
+#         },status=201)
