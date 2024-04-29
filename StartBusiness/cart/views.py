@@ -148,7 +148,7 @@ class paymentView(APIView):
      result = response.json()
     # Assuming result['link_url'] exists
      redirect_url = result['link_url']
-    #  print("Redirect to:", redirect_url)
+     print("Redirect to:", redirect_url)
     else:
        print("Failed to create payment link:", response.status_code, response.text)
     return Response({
