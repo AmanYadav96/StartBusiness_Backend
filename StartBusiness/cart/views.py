@@ -54,7 +54,7 @@ class CartViewById(APIView):
                 'message': "Cart data retrived",
                 'data':serializer.data
             },status=200)
-        except Cart.DoesNotExist:
+        except CartItem.DoesNotExist:
             return Response({
                 'status':status.HTTP_404_NOT_FOUND,
                 'message': "Invalid Cart id"
@@ -73,9 +73,9 @@ class CartUpdateView(GenericAPIView):
            serializer.save()
            return Response({
                 'status': status.HTTP_200_OK,
-                'message': 'Cart Updated Successfully'  
+                'message': 'Cart Item Updated Successfully'  
                 },status=200)
-        except Cart.DoesNotExist:
+        except CartItem.DoesNotExist:
             return Response({
                'status': status.HTTP_404_NOT_FOUND,
                 'message': 'invalid id',
@@ -87,14 +87,14 @@ class CartDeleteView(APIView):
     def delete(self, request, input):
         _id = input
         try:
-            cart = Cart.objects.get(cart_item_id=_id)
+            cart = CartItem.objects.get(cart_item_id=_id)
             cart.delete()
             return Response({
             'status': status.HTTP_200_OK,
-             'message': 'Cart Deleted Successfully' 
+             'message': 'Cart Item Deleted Successfully' 
             },
             status=200)
-        except Cart.DoesNotExist:
+        except CartItem.DoesNotExist:
             return Response({
              'status': status.HTTP_404_NOT_FOUND,
              'message': 'invalid Cart_id',
