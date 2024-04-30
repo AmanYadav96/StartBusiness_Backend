@@ -20,6 +20,5 @@ COPY . /app/
 
 # Expose the port the app runs on
 
-
 # Command to run the Django application
-CMD ["python", "manage.py", "runserver localhost:8000"]
+CMD ["python", "manage.py", "runserver 8000"]
