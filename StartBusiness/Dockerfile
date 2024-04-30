@@ -20,5 +20,7 @@ COPY . /app/
 
 # Expose the port the app runs on
 
+EXPOSE 9090
+
 # Command to run the Django application
-CMD ["python", "manage.py", "runserver 8000"]
+CMD ["python", "manage.py", "runserver"]
