@@ -6,10 +6,13 @@ from user.models import User
 
 class Cart(models.Model):
     cart_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
-    quantity = models.PositiveIntegerField(default=1)  # Assuming a default value
-    count = models.PositiveBigIntegerField(default=0)  # Assuming a default value
-    total_amount = models.PositiveBigIntegerField(default=0)  # Assuming a default value # OneToOneField doesn't need a default or unique parameter
-    user = models.OneToOneField(User, default=uuid.uuid4, unique=True, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+    user = models.OneToOneField(User, default=uuid.uuid4, on_delete=models.CASCADE)
 
     
+class CartItem(models.Model):
+    cart_item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+    quantity = models.PositiveIntegerField(default=1) 
+    count = models.PositiveBigIntegerField(default=0)
+    total_amount = models.PositiveBigIntegerField(default=0)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE) 
