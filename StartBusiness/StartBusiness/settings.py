@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-+7n!)oo$i!4@xjas+iqs$9q6a5d0_4l82h$=&tl#74wyywv3l(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*","https://start-business-46u6138wk-amanyadav96s-projects.vercel.app/","https://start-business.vercel.app/","https://start-business-agq8n22nb-amanyadav96s-projects.vercel.app","startbusinessbackend-production.up.railway.app","https://web-zt9gb9h7cogx.up-sg-sin1-k8s-1.apps.run-on-seenode.com"]
+ALLOWED_HOSTS = ["*","0.0.0.0:0","https://start-business-46u6138wk-amanyadav96s-projects.vercel.app/","https://start-business.vercel.app/","https://start-business-agq8n22nb-amanyadav96s-projects.vercel.app","startbusinessbackend-production.up.railway.app","https://web-zt9gb9h7cogx.up-sg-sin1-k8s-1.apps.run-on-seenode.com"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'product_highlight',
     'stock',
     'address',
-    'cart'
+    'cart',
+    'compare',
+
    
 ]
 
@@ -106,7 +108,7 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 # }
 
 
-# Postgre AWS
+# Postgres Animal
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
