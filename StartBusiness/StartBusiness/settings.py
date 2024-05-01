@@ -110,10 +110,10 @@ WSGI_APPLICATION = 'StartBusiness.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'mydb',
-        'USER': 'Krishna_Sadhu',
-        'PASSWORD': '147852369',
-        'HOST': 'mydatabase.c9i6acsg8l0l.ap-south-1.rds.amazonaws.com',
+        'NAME': 'edb_admin',
+        'USER': 'edb_admin',
+        'PASSWORD': '%oB-jE;Wdb0*b"]l',
+        'HOST': 'p-mtq5mwi88c.pg.biganimal.io',
         'PORT': '5432',
     }
 }
