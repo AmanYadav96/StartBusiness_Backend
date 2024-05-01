@@ -262,10 +262,12 @@ class UserLoginView(GenericAPIView):
        
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
+             cart = Cart.objects.get(user_id = user[0].user_id)
              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
               'user_id': user[0].user_id,
+              'cart_id': cart.cart_id,
               'user_role': user[0].user_role,
               'token': token
                              },status=200)
