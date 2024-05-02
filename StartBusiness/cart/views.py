@@ -1,3 +1,4 @@
+from cart.filter import CartFilter
 from .serializers import CartItemSerializer, CartViewSerializer
 from user.models import User
 from product.models import Product
@@ -29,6 +30,7 @@ class CartView(ListAPIView):
    queryset = CartItem.objects.all()
    serializer_class = CartViewSerializer
    
+   
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         if response.data == []:
@@ -42,28 +44,30 @@ class CartView(ListAPIView):
                   'data': response.data
                },status=200
             )
+
+
 class CartViewById(APIView):
-    
-    def get(self,request, input = None,format=None):
-        _id = input
-        print(_id)
+    queryset = CartItem.objects.all()
+    serializer_class = CartViewSerializer
+
+    def get(self, request, format=None):
+        _id = request.query_params.get('user_id')
+        
         try:
             cart = Cart.objects.get(user=_id)
-            print(cart)
-            cart_item = CartItem.objects.get(cart = cart.cart_id)
-            serializer = CartViewSerializer(cart_item)
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = CartViewSerializer(cart_items, many=True)
             return Response({
-                'status':status.HTTP_200_OK,
-                'message': "Cart data retrived",
-                'data':serializer.data
-            },status=200)
-        except CartItem.DoesNotExist:
+                'status': status.HTTP_200_OK,
+                'message': "Cart data retrieved",
+                'data': serializer.data
+            })
+        except Cart.DoesNotExist:
             return Response({
-                'status':status.HTTP_404_NOT_FOUND,
+                'status': status.HTTP_404_NOT_FOUND,
                 'message': "Invalid Cart id"
-            },
-            status=400)
-       
+            }, status=400)
+
         
 class CartUpdateView(GenericAPIView):
     serializer_class = CartItemSerializer
