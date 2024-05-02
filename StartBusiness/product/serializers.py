@@ -90,3 +90,9 @@ class ProductCartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ['product_id','brand','name','image','length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit','price','discount','discount_price','status','category']
+
+class ProductIdSerializer(serializers.ModelSerializer):
+    product_id = serializers.ListField()
+    class Meta:
+        model = Product
+        fields = ['product_id']

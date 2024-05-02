@@ -35,6 +35,7 @@ urlpatterns = [
     path('updateStatusInBulk/',UpdateStatusInBulk.as_view(),name="Update Status InBulk") ,
     path('updateCreatedAtInBulk/',UpdateCreatedAtInBulk.as_view(),name="Update CreatedAt InBulk") ,
     path('updateIsFeaturedInBulk/',UpdateIsFeaturedInBulk.as_view(),name="Update isFeatured InBulk") ,
-    path('deleteProductsInBulk/',DeleteProductInBulkView.as_view(),name="Delete Products InBulk") 
+    path('deleteProductsInBulk/',DeleteProductInBulkView.as_view(),name="Delete Products InBulk") ,
+    path('productId/',ProductIdView.as_view(),name='Product object')
     
     ]   

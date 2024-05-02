@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView , ListAPIView
+from product.models import Product
 from compare.serializers import CampareSerializer ,CampareItemSerializer
 
 from .models import Compare , CompareIteam
@@ -51,4 +52,6 @@ class CompareView(ListAPIView):
             'data' :serializer.data
             
             },status=200)
-   
+
+
+

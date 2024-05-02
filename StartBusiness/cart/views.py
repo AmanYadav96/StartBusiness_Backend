@@ -29,8 +29,6 @@ class CartAddView(GenericAPIView):
 class CartView(ListAPIView):
    queryset = CartItem.objects.all()
    serializer_class = CartViewSerializer
-   
-   
    def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         if response.data == []:
@@ -52,7 +50,6 @@ class CartViewById(APIView):
 
     def get(self, request, format=None):
         _id = request.query_params.get('user_id')
-        
         try:
             cart = Cart.objects.get(user=_id)
             cart_items = CartItem.objects.filter(cart=cart)

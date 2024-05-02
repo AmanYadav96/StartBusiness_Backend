@@ -820,3 +820,36 @@ class DeleteProductInBulkView(GenericAPIView):
              'message': 'Product Deleted Successfully' 
             },
             status=200)  
+
+class ProductIdView(GenericAPIView):
+    serializer_class = ProductIdSerializer
+    def post(self, request, format=None):
+        serializer = ProductIdSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        product_ids = serializer.data.get('product_id')
+        print(product_ids)
+        response_data = []
+        for _id in product_ids: 
+            try:
+                product = Product.objects.get(product_id=_id)
+                response_data.append({
+                    "product":{
+                    "product_id": product.product_id,
+                    "product_name": product.name,
+                    "product_price": product.price,
+                    "product_size": product.size_variant,
+                    "product_surface_finish": product.surface_finish,
+                    "product_discount_price": product.discount_price,
+                    "product_discount": product.discount,
+                    "product_no_of_pieces_box": product.no_of_pcs_box 
+                } 
+                })
+            except Product.DoesNotExist:
+                response_data.append({
+                    'product_id': _id,
+                    'error': f"No product found with this product id: {_id}",
+                })
+
+        return Response({
+            'data': response_data,
+        })
