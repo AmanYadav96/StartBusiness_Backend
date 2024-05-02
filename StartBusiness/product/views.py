@@ -833,16 +833,17 @@ class ProductIdView(GenericAPIView):
             try:
                 product = Product.objects.get(product_id=_id)
                 response_data.append({
-                    "product":{
+                    
                     "product_id": product.product_id,
                     "product_name": product.name,
+                    "product_image":product.image.url,
                     "product_price": product.price,
                     "product_size": product.size_variant,
                     "product_surface_finish": product.surface_finish,
                     "product_discount_price": product.discount_price,
                     "product_discount": product.discount,
                     "product_no_of_pieces_box": product.no_of_pcs_box 
-                } 
+                
                 })
             except Product.DoesNotExist:
                 response_data.append({
@@ -851,5 +852,5 @@ class ProductIdView(GenericAPIView):
                 })
 
         return Response({
-            'data': response_data,
+            'product': response_data,
         })
