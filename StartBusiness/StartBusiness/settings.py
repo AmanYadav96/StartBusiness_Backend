@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'product_highlight',
     'stock',
     'address',
-    'cart'
+    'cart',
+    'order'
    
 ]
 
