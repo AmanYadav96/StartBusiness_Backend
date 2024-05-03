@@ -51,7 +51,7 @@ def create(user_id):
      cart = Cart.objects.create(user_id=user_id)
      cart.save()
      dt = {'user_id':user_id}
-     serializer = CampareSerializer()
+     serializer = CampareSerializer(data = dt)
      serializer.is_valid(raise_exception=True)
      serializer.save()
 # views code .................
