@@ -46,7 +46,7 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
     time_diff = end - start
     return time_diff.seconds/60
 
-async def create(user_id):
+def create(user_id):
      cart = Cart.objects.create(user_id=user_id)
      cart.save()
      compare = Compare.objects.create(user_id = user_id)
