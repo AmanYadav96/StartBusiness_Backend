@@ -17,6 +17,7 @@ from .customepermission import IsManager
 from rest_framework.permissions import IsAuthenticated
 # from StartBusiness.email import send_verification_email
 from .tasks import send_verification_email
+from compare.serializers import CampareSerializer
 
 
 # basic used functions ......
@@ -49,8 +50,10 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
 def create(user_id):
      cart = Cart.objects.create(user_id=user_id)
      cart.save()
-     compare = Compare.objects.create(user_id = user_id)
-     compare.save()
+     dt = {'user_id':user_id}
+     serializer = CampareSerializer()
+     serializer.is_valid(raise_exception=True)
+     serializer.save()
 # views code .................
 
 # User register view --------------------------------
