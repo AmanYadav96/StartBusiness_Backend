@@ -1,3 +1,4 @@
+from sys import argv
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
@@ -14,7 +15,8 @@ from datetime import datetime, timezone
 import json
 from .customepermission import IsManager
 from rest_framework.permissions import IsAuthenticated
-from StartBusiness.email import send_verification_email
+# from StartBusiness.email import send_verification_email
+from .tasks import send_verification_email
 
 
 # basic used functions ......
@@ -33,8 +35,8 @@ def otp_generator(id):
    user = User.objects.get(user_email=id)
    user.otp_key = d
    user.save()
-   send_verification_email(otp, id)
-   return user.user_id
+   send_verification_email.delay(otp, id)
+  
 
 
 
@@ -44,8 +46,11 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
     time_diff = end - start
     return time_diff.seconds/60
 
-
-
+async def create(user_id):
+     cart = Cart.objects.create(user_id=user_id)
+     cart.save()
+     compare = Compare.objects.create(user_id = user_id)
+     compare.save()
 # views code .................
 
 # User register view --------------------------------
@@ -57,14 +62,13 @@ class UserRegisterView(GenericAPIView):
         serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
         serializer.save()
         if serializer.data['user_role'] == 'Customer':
-            cart = Cart.objects.create(user_id=serializer.data['user_id'])
-            cart.save()
+            create(serializer.data['user_id'])
         id = request.data.get('user_email')
-        user_id = otp_generator(id)
+        otp_generator(id)
         return Response({
                  'status': status.HTTP_201_CREATED,
                  'message': " User Successfully registered",
-                 'user_id': user_id
+                 'user_id': serializer.data['user_id']
                                    },status=201)
 
       

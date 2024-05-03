@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_yasg',
     'django_filters',
+    'channels',
     'user',
     'contractor',
     'manager',
@@ -120,6 +121,8 @@ DATABASES = {
     }
 }
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
 
 # Password validation
@@ -207,6 +210,7 @@ REST_FRAMEWORK = {
    
 }
 
+DJANGO_ALLOW_ASYNC_UNSAFE=True
 
 
 #AWS_CREDINTIALS
