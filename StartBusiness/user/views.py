@@ -36,7 +36,7 @@ def otp_generator(id):
    user = User.objects.get(user_email=id)
    user.otp_key = d
    user.save()
-   send_verification_email.delay(otp, id)
+   send_verification_email(otp, id)
   
 
 
@@ -54,6 +54,7 @@ def create(user_id):
      serializer = CampareSerializer(data = dt)
      serializer.is_valid(raise_exception=True)
      serializer.save()
+     print(serializer)
 # views code .................
 
 # User register view --------------------------------
