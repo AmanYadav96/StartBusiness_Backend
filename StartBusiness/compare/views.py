@@ -15,6 +15,7 @@ class AddToCompareView(GenericAPIView):
         compare_id = None
         compare_data = None
         products = request.data.get('product_id')
+        print(id)
 
 
         if Compare.objects.get(user_id=id) is None:
@@ -52,22 +53,20 @@ class CompareView(APIView):
             },status=200)
 
 
-class CompareUpdateView(GenericAPIView):
-    serializer_class = CampareItemSerializer
-    def patch(self, request, input, format=None):
+class CompareDeleteView(APIView):
+    def delete(self, request, input):
         _id = input
         try:
-           compare = CompareItem.objects.get(compare_item_id=_id)
-           serializer = CampareItemSerializer(compare, data=request.data, partial=True)
-           serializer.is_valid(raise_exception=True)
-           serializer.save()
-           return Response({
-                'status': status.HTTP_200_OK,
-                'message': 'Compare Item Updated Successfully'  
-                },status=200)
+            compare = CompareItem.objects.get(compare_item_id=_id)
+            compare.delete()
+            return Response({
+            'status': status.HTTP_200_OK,
+             'message': 'Compare Item Deleted Successfully' 
+            },
+            status=200)
         except CompareItem.DoesNotExist:
             return Response({
-               'status': status.HTTP_404_NOT_FOUND,
-                'message': 'invalid id',
-                },
-                status=400)
+             'status': status.HTTP_404_NOT_FOUND,
+             'message': 'invalid Compare_item_id',
+            },
+            status=404)

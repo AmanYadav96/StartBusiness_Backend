@@ -4,7 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('add/<uuid:input>/',AddToCompareView.as_view(), name = 'AddToCompare'),
-    path('update/<uuid:input>/',CompareUpdateView.as_view(),name='update compare item'),
+    path('delete/<uuid:input>/',CompareDeleteView.as_view(),name='update compare item'),
     path('view/<uuid:input>/',CompareView.as_view(), name = 'AddToCompare')
     
 
