@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import GenericAPIView , ListAPIView
 from product.models import Product
 from compare.serializers import CampareSerializer ,CampareItemSerializer
-
+from rest_framework.views import APIView
 from .models import Compare , CompareIteam
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,7 +19,7 @@ class AddToCompareView(GenericAPIView):
             'message': 'Product added to compare successfully',
             'compare_id' : serializer.data
         },status=200)
-class CompareView(ListAPIView):
+class CompareView(APIView):
        serializer_class = CampareItemSerializer
        def get (self,request,input):
            id = input
