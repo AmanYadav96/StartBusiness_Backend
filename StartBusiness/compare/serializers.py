@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import CompareIteam,Compare
+from .models import CompareItem,Compare
 
 
 class CampareSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class CampareSerializer(serializers.ModelSerializer):
 
 class CampareItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CompareIteam
+        model = CompareItem
         fields = "__all__"
 
     
