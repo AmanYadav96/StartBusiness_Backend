@@ -120,10 +120,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+import redis
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 
+CELERY_BROKER_URL ='rediss://default:AVNS_dDCXi2vGmyRQcefboRh@redis-2b6e85c-virajgurjar789-c014.l.aivencloud.com:12875'
+# CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
