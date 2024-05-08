@@ -299,3 +299,21 @@ class UserLoginView(GenericAPIView):
               'status code': status.HTTP_400_BAD_REQUEST,
               'message':"user is not registered with this email or mobile number"         
                },status=400)
+
+
+
+class UserDeleteView(APIView):
+    def delete(self, request, input):
+        try:
+            _id = input
+            user = User.objects.get(user_id=_id)
+            user.delete()
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'User Deleted Successfully'
+            },status=200)
+        except User.DoesNotExist:
+            return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': 'Invalid User_id'
+            }, status=status.HTTP_404_NOT_FOUND)
