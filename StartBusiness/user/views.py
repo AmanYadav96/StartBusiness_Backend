@@ -63,7 +63,7 @@ class UserRegisterView(GenericAPIView):
     def post(self, request , format=None):
         serializer = UserSerializer(data = request.data)
         serializer.is_valid(raise_exception = True)
-        serializer.validated_data['user_password']=make_password(serializer.validated_data['user_password'])
+        serializer.validated_data['user_password']= make_password(serializer.validated_data['user_password'])
         serializer.save()
         if serializer.data['user_role'] == 'Customer':
             create(serializer.data['user_id'])
