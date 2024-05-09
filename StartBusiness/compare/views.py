@@ -15,6 +15,7 @@ class AddToCompareView(GenericAPIView):
         comapre_items = CampareItemSerializer(data=request.data)
         comapre_items.is_valid(raise_exception=True)
         comapre_items.save()
+        
 
         return Response({
             'status': status.HTTP_200_OK,
@@ -38,8 +39,8 @@ class CompareView(APIView):
 
 
 class CompareDeleteView(APIView):
-    def delete(self, request, input):
-        _id = input
+    def delete(self, request, compare_item_id):
+        _id = compare_item_id
         try:
             compare = CompareItem.objects.get(compare_item_id=_id)
             compare.delete()
@@ -52,5 +53,24 @@ class CompareDeleteView(APIView):
             return Response({
              'status': status.HTTP_404_NOT_FOUND,
              'message': 'invalid Compare_item_id',
+            },
+            status=404)
+
+class CompareDeleteAllView(APIView):
+    def delete(self, request,compare_id):
+        _id = compare_id
+        try:
+            compare = CompareItem.objects.filter(compare_id=_id)
+            for i in compare:
+                i.delete()
+            return Response({
+            'status': status.HTTP_200_OK,
+             'message': 'Compare All Item Deleted Successfully' 
+            },
+            status=200)
+        except CompareItem.DoesNotExist:
+            return Response({
+             'status': status.HTTP_404_NOT_FOUND,
+             'message': 'invalid Compare_id',
             },
             status=404)
