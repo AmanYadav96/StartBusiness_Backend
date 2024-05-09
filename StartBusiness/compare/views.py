@@ -9,25 +9,9 @@ from rest_framework import status
 # Create your views here.
 class AddToCompareView(GenericAPIView):
     serializer_class = CampareItemSerializer
-    def post(self,request,input):
-        id = input
-        products = None
-        compare_id = None
-        compare_data = None
-        products = request.data.get('product_id')
-        print(id)
-
-
-        if Compare.objects.get(user_id=id) is None:
-            user_id = {'user_id': input}
-            print(user_id)
-            serializer = CampareSerializer(data=user_id)
-            serializer.is_valid(raise_exception=True)
-            compare_data = serializer.save()
-        else:
-            compare_data =Compare.objects.get(user_id = id)
-            print(compare_data)
-
+    def post(self,request,format=None):
+        
+        
         comapre_items = CampareItemSerializer(data=request.data)
         comapre_items.is_valid(raise_exception=True)
         comapre_items.save()
@@ -35,7 +19,7 @@ class AddToCompareView(GenericAPIView):
         return Response({
             'status': status.HTTP_200_OK,
             'message': 'Product added to compare successfully',
-            'compare_id' : compare_data.compare_id
+           
         },status=200)
 
 class CompareView(APIView):
