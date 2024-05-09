@@ -25,8 +25,8 @@ class AddToCompareView(GenericAPIView):
 
 class CompareView(APIView):
        serializer_class = CampareItemSerializer
-       def get (self,request,input):
-           id = input
+       def get (self,request,compare_id):
+           id = compare_id
            items  = CompareItem.objects.filter(compare_id=id)
            serializer = CampareItemSerializer(items ,many= True)
            
