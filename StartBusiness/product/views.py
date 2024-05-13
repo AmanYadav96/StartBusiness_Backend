@@ -842,8 +842,12 @@ class ProductIdView(GenericAPIView):
                     "product_surface_finish": product.surface_finish,
                     "product_discount_price": product.discount_price,
                     "product_discount": product.discount,
-                    "product_no_of_pieces_box": product.no_of_pcs_box 
-                
+                    "product_no_of_pieces_box": product.no_of_pcs_box,
+                    "product_description": product.description,
+                    "product_category":product.category.category_name,
+                    "product_color":product.color,
+                    "product_material":product.material
+            
                 })
             except Product.DoesNotExist:
                 response_data.append({
