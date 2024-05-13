@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9
+FROM python:3.12.3-windowsservercore-1809
 
 # Set environment variables for Python
 ENV PYTHONDONTWRITEBYTECODE 1
