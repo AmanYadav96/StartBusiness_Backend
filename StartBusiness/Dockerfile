@@ -11,7 +11,7 @@ COPY requirements.txt /app/
 RUN pip install --upgrade pip
 RUN ["pip" ,"install","Django==5.0.6" ]
 RUN ["pip" ,"install","djongo==1.3.6" ]
-RUN ["pip" ,"install",
+RUN ["pip" ,"install","sqlparse==0.5.0" ]
 RUN pip install -r requirements.txt
 # Copy the current directory contents into the container at /app
 COPY . /app/
