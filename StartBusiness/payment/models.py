@@ -15,6 +15,6 @@ class Payment(models.Model):
     status = models.CharField(max_length=20, default='pending')
     timestamp_initiated = models.DateTimeField(auto_now_add=True)
     timestamp_completed = models.DateTimeField(null=True, blank=True)
-    user_mobile_no = models.IntegerField()
+    user_mobile_no = models.CharField(max_length=10)
     user_email = models.EmailField(max_length=225,null=True)
 
