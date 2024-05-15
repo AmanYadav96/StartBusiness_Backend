@@ -14,7 +14,8 @@ class OrderAddView(GenericAPIView):
         serializer.save()
         return Response({
             'status':status.HTTP_201_CREATED,
-            "msg":'Order added successfully'
+            "msg":'Order added successfully',
+            'data':'',
         },status=201)
 
 

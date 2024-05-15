@@ -2,6 +2,7 @@ from sys import argv
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
+from wishlist.models import Wishlist
 from compare.models import Compare
 from cart.models import Cart
 from user.serializers import UserLoginSerializer, UserSerializer,UserOtpSerializer,ForgetPasswordSerializer
@@ -50,6 +51,9 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
 def create(user_id):
      cart = Cart.objects.create(user_id=user_id)
      cart.save()
+     wishlist = Wishlist.objects.create(user_id=user_id)
+     wishlist.save()
+     print(wishlist.wishlist_id)
      dt = {'user_id':user_id}
      serializer = CampareSerializer(data = dt)
      serializer.is_valid(raise_exception=True)
@@ -273,12 +277,14 @@ class UserLoginView(GenericAPIView):
              token =get_tokens_for_user(user[0])
              cart = Cart.objects.get(user_id = user[0].user_id)
              compare = Compare.objects.get(user_id = user[0].user_id)
+             wishlist = Wishlist.objects.get(user_id=user[0].user_id)
              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
               'user_id': user[0].user_id,
               'cart_id': cart.cart_id,
               'compare_id':compare.compare_id,
+              'wishlist_id':wishlist.wishlist_id,
               'user_role': user[0].user_role,
               'token': token
                              },status=200)
