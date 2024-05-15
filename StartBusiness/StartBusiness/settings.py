@@ -82,6 +82,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'StartBusiness.wsgi.application'
+ASGI_APPLICATION = 'StartBusiness.asgi.application'
+
 
 
 # Database
