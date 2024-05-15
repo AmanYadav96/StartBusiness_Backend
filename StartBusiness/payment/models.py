@@ -11,7 +11,10 @@ class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment_method = models.CharField(max_length=50)
-    transaction_id = models.CharField(max_length=100, unique=True)
+    transaction_id = models.CharField(max_length=100, unique=True,null=True)
     status = models.CharField(max_length=20, default='pending')
     timestamp_initiated = models.DateTimeField(auto_now_add=True)
     timestamp_completed = models.DateTimeField(null=True, blank=True)
+    user_mobile_no = models.IntegerField()
+    user_email = models.EmailField(max_length=225,null=True)
+
