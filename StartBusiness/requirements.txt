@@ -23,10 +23,6 @@ coreschema==0.0.4
 cryptography==41.0.4
 defusedxml==0.7.1
 distlib==0.3.7
-<<<<<<< HEAD
-
-=======
->>>>>>> e1b890517efb34e16626715115802d3945e9f84a
 django-cors-headers==4.3.0
 django-filter==23.3
 django-phone-field==1.8.1
@@ -34,10 +30,6 @@ django-rest-swagger==2.2.0
 django-storages==1.14.2
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.0
-<<<<<<< HEAD
-
-=======
->>>>>>> e1b890517efb34e16626715115802d3945e9f84a
 dnspython==2.4.2
 drf-yasg==1.21.7
 ecdsa==0.18.0
