@@ -846,8 +846,9 @@ class ProductIdView(GenericAPIView):
                     "product_description": product.description,
                     "product_category":product.category.category_name,
                     "product_color":product.color,
-                    "product_material":product.material
-            
+                    "product_material":product.material,
+                    "product_brand":product.brand.brand_name,
+                    "product_min_quantity":product.min_order_quantity
                 })
             except Product.DoesNotExist:
                 response_data.append({
