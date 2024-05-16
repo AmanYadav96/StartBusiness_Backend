@@ -6,7 +6,7 @@ from order.models import Order
 
 # Create your models here.
 class Payment(models.Model):
-    payment_id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    payment_id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)

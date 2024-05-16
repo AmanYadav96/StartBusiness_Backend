@@ -6,13 +6,14 @@ from rest_framework.views import APIView
 from payment.models import Payment
 from rest_framework.generics import GenericAPIView
 from payment.serializers import PaymentSerializer
+from user.models import User
 # Create your views here.
 
 import requests
 import json
 import uuid
 import random
-
+import string
 
 class PaymentAddView(GenericAPIView):
    serializer_class = PaymentSerializer
@@ -21,20 +22,24 @@ class PaymentAddView(GenericAPIView):
     serializer.is_valid(raise_exception=True)
     cust_mobileno = request.data['user_mobile_no']  # Normally would be a real phone number
     cust_email_id = request.data['user_email']
-    random_number = str(random.randint(1000, 9999))  
+    random_number =  str(uuid.uuid4())
+    userr=User.objects.get(user_id = request.data['user'])
+    
     payload = {
     'customer_details': {
         'customer_phone': cust_mobileno,
-        'customer_email': cust_email_id
+        'customer_email': cust_email_id,
+        'customer_name': userr.user_name,
+        'customer_id':str(userr.user_id)
     },
     'link_notify': {
         'send_sms': True,
         'send_email': True
     },
-    'link_id': random_number,
+    'link_id':random_number,
     'link_amount': request.data['amount'],
     'link_currency': 'INR',
-    'link_purpose': 'Payment for PlayStation 11'
+    'link_purpose': 'to buy product'
     }
     headers = {
     "accept": "application/json",
@@ -52,18 +57,23 @@ class PaymentAddView(GenericAPIView):
 # Handling the response
     if response.status_code == 200:
      result = response.json()
-     serializer.save()
+     payment_id =serializer.save()
     # Assuming result['link_url'] exists
      redirect_url = result['link_url']
      print("Redirect to:", redirect_url)
-    else:
-       print("Failed to create payment link:", response.status_code, response.text)
-    return Response({
+     return Response({
             'status':status.HTTP_201_CREATED,
             "msg":'Cart Registered',
-            'link': redirect_url
+            'link': redirect_url,
+            'payment': payment_id.payment_id,
         },status=201)
-        
+    else:
+       print("Failed to create payment link:", response.status_code, response.text)
+       return Response({
+            'status':response.status_code,
+            "msg":'failed',
+            'message':response.text
+        },status=response.status_code)
          
 
 
@@ -147,6 +157,7 @@ class callback(APIView):
     def post(self, request,format=None):
         print(request.data)
         return Response({
+            
             'status':status.HTTP_201_CREATED,
-            "msg":'Cart Registered',
+            "msg":request.data,
         },status=201)
