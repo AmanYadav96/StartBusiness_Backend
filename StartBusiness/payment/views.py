@@ -24,7 +24,7 @@ class PaymentAddView(GenericAPIView):
     cust_email_id = request.data['user_email']
     random_number =  str(uuid.uuid4())
     userr=User.objects.get(user_id = request.data['user'])
-    
+    serializer.validated_data['link_id'] = random_number
     payload = {
     'customer_details': {
         'customer_phone': cust_mobileno,
@@ -155,7 +155,8 @@ class PaymentDeleteView(APIView):
 class callback(APIView):
  
     def post(self, request,format=None):
-        print(request.data)
+        callback_dict = request.data['data']
+        print(callback_dict)
         return Response({
             
             'status':status.HTTP_201_CREATED,
