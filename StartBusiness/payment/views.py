@@ -156,7 +156,9 @@ class callback(APIView):
  
     def post(self, request,format=None):
         callback_dict = request.data['data']
-        print(callback_dict['payment'])
+        link_id = callback_dict['order_tags']['link_id']
+        print(link_id)
+        print(callback_dict['payment']['payment_status'])
         return Response({
             
             'status':status.HTTP_201_CREATED,
