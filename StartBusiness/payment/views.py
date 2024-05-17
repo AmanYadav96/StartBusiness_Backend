@@ -169,3 +169,26 @@ class callback(APIView):
             'status':status.HTTP_201_CREATED,
             "msg":request.data,
         },status=201)
+        
+        
+        
+class PayementResopnse(APIView):
+    
+    def get(self, request,input, format=None, ):
+        id = input
+        if Payment.objects.filter(payment_id = id).count()==1:
+            payment = Payment.objects.get(payment_id=id)
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'data retrrieved successfully',
+                'payment_response': payment.status,
+                'payment_time':payment.timestamp_completed
+            },status=200)
+        else:
+           return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': 'Invalid Payment_id'
+            }, status=status.HTTP_404_NOT_FOUND)   
+                    
+        
+        
