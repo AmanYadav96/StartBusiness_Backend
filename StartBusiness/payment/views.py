@@ -156,9 +156,39 @@ class callback(APIView):
  
     def post(self, request,format=None):
         callback_dict = request.data['data']
-        print(callback_dict)
+        link_id = callback_dict['order']['order_tags']['link_id']
+        payment = Payment.objects.get(link_id = link_id)
+        print(callback_dict['payment']['payment_status'])
+        payment.status = callback_dict['payment']['payment_status']
+        payment.timestamp_completed = callback_dict['payment']['payment_time']
+        payment.transaction_id = callback_dict['order']['order_id']
+        payment.save()
+        
         return Response({
             
             'status':status.HTTP_201_CREATED,
             "msg":request.data,
         },status=201)
+        
+        
+        
+class PayementResopnse(APIView):
+    
+    def get(self, request,input, format=None, ):
+        id = input
+        if Payment.objects.filter(payment_id = id).count()==1:
+            payment = Payment.objects.get(payment_id=id)
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'data retrrieved successfully',
+                'payment_response': payment.status,
+                'payment_time':payment.timestamp_completed
+            },status=200)
+        else:
+           return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': 'Invalid Payment_id'
+            }, status=status.HTTP_404_NOT_FOUND)   
+                    
+        
+        
