@@ -156,7 +156,7 @@ class callback(APIView):
  
     def post(self, request,format=None):
         callback_dict = request.data['data']
-        link_id = callback_dict['order_tags']['link_id']
+        link_id = callback_dict['order']['order_tags']
         print(link_id)
         print(callback_dict['payment']['payment_status'])
         return Response({
