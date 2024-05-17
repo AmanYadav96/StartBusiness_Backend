@@ -15,7 +15,7 @@ class OrderAddView(GenericAPIView):
         return Response({
             'status':status.HTTP_201_CREATED,
             "message":"Order Added Successfully",
-            'order':order.order_id
+            'order': order.order_id
         })
   
 class OrderView(APIView):
