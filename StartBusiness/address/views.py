@@ -11,10 +11,11 @@ class AddressAddView(GenericAPIView):
     def post(self, request,format=None):
         serializer = AddressSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        address = serializer.save()
         return Response({
             'status':status.HTTP_201_CREATED,
-            "msg":'address added successfully'
+            "msg":'address added successfully',
+            'address_id':address.address_id
         },status=201)
 
 
@@ -90,4 +91,23 @@ class AddressDeleteView(APIView):
                 'status': status.HTTP_404_NOT_FOUND,
                 'message': 'Invalid address_id'
             }, status=status.HTTP_404_NOT_FOUND)
+
+class AddressViewByUserId(APIView):
+    serializer_class = AddressSerializer
+    def get(self, request, user_id):
+       try:
+            _id = user_id
+            address = Address.objects.filter(user=_id)
+            serializer = AddressSerializer(address, many=True)
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'address retrieved Successfully',
+                'data':serializer.data
+            },status=200)
+       except Address.DoesNotExist:
+            return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': 'Invalid user_id'
+            }, status=status.HTTP_404_NOT_FOUND)
+
 

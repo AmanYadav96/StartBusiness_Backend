@@ -10,8 +10,6 @@ from rest_framework import status
 class AddToCompareView(GenericAPIView):
     serializer_class = CampareItemSerializer
     def post(self,request,format=None):
-        
-        
         comapre_items = CampareItemSerializer(data=request.data)
         comapre_items.is_valid(raise_exception=True)
         comapre_items.save()
@@ -20,22 +18,26 @@ class AddToCompareView(GenericAPIView):
         return Response({
             'status': status.HTTP_200_OK,
             'message': 'Product added to compare successfully',
-           
         },status=200)
 
 class CompareView(APIView):
        serializer_class = CampareItemSerializer
        def get (self,request,compare_id):
-           id = compare_id
-           items  = CompareItem.objects.filter(compare_id=id)
-           serializer = CampareItemSerializer(items ,many= True)
+           try:
+               _id = compare_id
+               items  = CompareItem.objects.filter(compare_id=_id)
+               serializer = CampareItemSerializer(items ,many= True)
+               return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'data retrived successfully',
+                'data' :serializer.data
+                },status=200)
+           except CompareItem.DoesNotExist:
+               return Response({
+                    'status': status.HTTP_404_NOT_FOUND,
+                    'message': 'compare item not found'
+                    },status=404)
            
-           return Response({
-            'status': status.HTTP_200_OK,
-            'message': 'data retrived successfully',
-            'data' :serializer.data
-            
-            },status=200)
 
 
 class CompareDeleteView(APIView):

@@ -53,3 +53,20 @@ class OrderView(APIView):
         
 
 
+class OrderViewByUserId(APIView):
+    serializer_class = OrderSerializer
+    def get(self, request, user_id):
+       try:
+            _id = user_id
+            order = Order.objects.filter(user=_id)
+            serializer = OrderSerializer(order, many=True)
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': 'order retrieved Successfully',
+                'data':serializer.data
+            },status=200)
+       except Order.DoesNotExist:
+            return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message': 'Invalid user_id'
+            }, status=status.HTTP_404_NOT_FOUND)
