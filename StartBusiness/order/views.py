@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
+from cart.models import CartItem
 from order.models import Order
 from order.serializers import OrderSerializer
 
@@ -43,7 +44,7 @@ class OrderView(APIView):
                     status=404
                 )
         else:
-            order = Order.objects.all()
+            order = Order.objects.all().order_by('-created_at')
             serializer = OrderSerializer(order, many=True)
             return Response({
                  'status': status.HTTP_200_OK,
@@ -58,7 +59,7 @@ class OrderViewByUserId(APIView):
     def get(self, request, user_id):
        try:
             _id = user_id
-            order = Order.objects.filter(user=_id)
+            order = Order.objects.filter(user=_id).order_by('-created_at')
             serializer = OrderSerializer(order, many=True)
             return Response({
                 'status': status.HTTP_200_OK,
@@ -70,3 +71,4 @@ class OrderViewByUserId(APIView):
                 'status': status.HTTP_404_NOT_FOUND,
                 'message': 'Invalid user_id'
             }, status=status.HTTP_404_NOT_FOUND)
+
