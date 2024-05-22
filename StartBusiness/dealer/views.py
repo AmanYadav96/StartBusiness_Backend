@@ -7,11 +7,14 @@ from rest_framework.views import APIView
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
+from user.customepermission import IsAdmin
 
 
 
 # add dealer
 class DealerAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = DealerSerializer
     def post(self , request):
             serializer = DealerSerializer(data=request.data)
@@ -26,6 +29,7 @@ class DealerAddView(GenericAPIView):
 
 # get all dealer and get one dealer by id
 class DealerAllView(ListAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     queryset = Dealer.objects.all()
     filter_backends = [DjangoFilterBackend]
     serializer_class = DealerSerializer
@@ -45,6 +49,7 @@ class DealerAllView(ListAPIView):
 
 # get one dealer by id
 class DealerView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def get(self, request, input=None, format=None):
             _id = input
             try:
@@ -68,6 +73,7 @@ class DealerView(APIView):
 
 # update dealer
 class UpdateDealerView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = DealerSerializer
     def patch(self, request, input, format=None):
       _id = input
@@ -90,6 +96,7 @@ class UpdateDealerView(GenericAPIView):
        
 # delete dealer
 class DeleteDealerView(APIView):
+     permission_classes = [IsAuthenticated,IsAdmin]
      def delete(self, request, input, format=None):
         _id = input
         try:
@@ -114,3 +121,4 @@ class DeleteDealerView(APIView):
 
 
 
+ 

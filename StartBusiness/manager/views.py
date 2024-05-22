@@ -4,8 +4,11 @@ from manager.serializers import ManagerSerializer
 from rest_framework.views import APIView
 from manager.models  import Manager
 from rest_framework import viewsets
-
+from rest_framework.permissions import IsAuthenticated
+from user.customepermission import IsAdmin
 class ManagerRegisterView(generics.GenericAPIView):
+
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ManagerSerializer
     def post(self , request):
         serializer = ManagerSerializer(data=request.data)
@@ -19,6 +22,7 @@ class ManagerRegisterView(generics.GenericAPIView):
         )
     
 class ManagerView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def get(self, request, input=None, format=None):
         _id = input
         print(_id)
@@ -55,6 +59,7 @@ class ManagerView(APIView):
     
 
 class UpdateManagerView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def patch(self, request, input, format=None):
         _id = input
         print(_id)
@@ -75,6 +80,7 @@ class UpdateManagerView(APIView):
        
 
 class DeleteManagerView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input, format=None):
         _id = input
         manager = Manager.objects.get(manager_id=_id)

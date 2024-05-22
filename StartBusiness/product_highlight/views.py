@@ -8,10 +8,13 @@ from product.models import Product
 from product.serializers import ProductCartSerializer
 from product_highlight.models import ProductHighlight
 from product_highlight.serializers import ProductHighlightSerializer
+from user.customepermission import IsAdmin
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 
 # add product highlight
 class ProductHighlightAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductHighlightSerializer
     def post(self, request,format=None):
         serializer = ProductHighlightSerializer(data=request.data)
@@ -25,6 +28,7 @@ class ProductHighlightAddView(GenericAPIView):
 
 # update product highlight
 class ProductHighlightUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductHighlightSerializer
     def patch(self, request, input, format=None):
         id = input
@@ -47,6 +51,7 @@ class ProductHighlightUpdateView(GenericAPIView):
 
 # get product highlight   
 class ProductHighlightAllView(ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Product.objects.all()
     serializer_class = ProductCartSerializer
     filterset_class = ProductHighlightFilter
@@ -85,6 +90,7 @@ class ProductHighlightAllView(ListAPIView):
     
 #  get product highlight by id 
 class ProductHighlightView(APIView):
+    permission_classes = [AllowAny]
     serializer_class = ProductHighlightSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -113,6 +119,7 @@ class ProductHighlightView(APIView):
 
 # delete product highlight
 class ProductHighlightDeleteView(APIView):
+    permission_classes = [IsAuthenticated, IsAdmin]
     def delete(self, request, input):
         try:
             id = input

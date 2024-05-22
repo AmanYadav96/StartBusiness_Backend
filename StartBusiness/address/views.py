@@ -4,9 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from address.models import Address
 from address.serializers import AddressSerializer
+from user.customepermission import IsCustomer
+from rest_framework.permissions import IsAuthenticated
 
 # add address
 class AddressAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = AddressSerializer
     def post(self, request,format=None):
         serializer = AddressSerializer(data=request.data)
@@ -21,6 +24,7 @@ class AddressAddView(GenericAPIView):
 
 # update address
 class AddressUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = AddressSerializer
     def patch(self, request, input):
         id = input
@@ -42,6 +46,7 @@ class AddressUpdateView(GenericAPIView):
 
 # get address or get address by id   
 class AddressView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = AddressSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -77,6 +82,7 @@ class AddressView(APIView):
 
 # delete address
 class AddressDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     def delete(self, request, input):
         try:
             id = input
@@ -93,6 +99,7 @@ class AddressDeleteView(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
 class AddressViewByUserId(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = AddressSerializer
     def get(self, request, user_id):
        try:

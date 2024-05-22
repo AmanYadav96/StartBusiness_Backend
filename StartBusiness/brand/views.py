@@ -14,6 +14,10 @@ from dealer.models import Dealer
 from rest_framework.parsers import BaseParser , JSONParser
 import json
 from dealer.serializers import DealerSerializer
+from rest_framework.permissions import IsAuthenticated,AllowAny
+from user.customepermission import IsAdmin
+
+
 # add brand
 class ListParser(BaseParser):
     def parse(self, stream, media_type=None, parser_context=None):
@@ -22,6 +26,7 @@ class ListParser(BaseParser):
 
 # parser_classes = [ListParser]
 class BrandAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = BrandSerializer
     def post(self , request):
             serializer = BrandSerializer(data=request.data)
@@ -37,6 +42,7 @@ class BrandAddView(GenericAPIView):
 
 # get all brands and get one brand by id
 class BrandAllView(ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Brand.objects.all().order_by('-created_at')
     filter_backends = [OrderingFilter, SearchFilter,DjangoFilterBackend]
     pagination_class = CustomPagination
@@ -58,6 +64,7 @@ class BrandAllView(ListAPIView):
         },status=200)
 
 class BrandView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def get(self, request, input=None, format=None):
             _id = input
             try:
@@ -82,6 +89,7 @@ class BrandView(APIView):
     
 # update brand
 class UpdateBrandView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = BrandSerializer
     def patch(self, request, input, format=None):
        _id = input
@@ -103,6 +111,7 @@ class UpdateBrandView(GenericAPIView):
        
 # delete brand
 class DeleteBrandView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input, format=None):
         _id = input
         try:
@@ -127,6 +136,7 @@ class DeleteBrandView(APIView):
 
 
 class DealerViewAccordingBrand(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = DealerViewAccordingBrandSerializer
     # parser_classes = [ListParser]
     def post(self, request, format=None):

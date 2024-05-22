@@ -14,8 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import random
 from datetime import datetime, timezone
 import json
-from .customepermission import IsManager
-from rest_framework.permissions import IsAuthenticated
+from .customepermission import IsManager , IsAdmin
+from rest_framework.permissions import IsAuthenticated ,AllowAny
 # from StartBusiness.email import send_verification_email
 from .tasks import send_verification_email
 from compare.serializers import CampareSerializer
@@ -63,6 +63,7 @@ def create(user_id):
 
 # User register view --------------------------------
 class UserRegisterView(GenericAPIView):
+    permission_classes = [AllowAny]
     serializer_class = UserSerializer
     def post(self, request , format=None):
         serializer = UserSerializer(data = request.data)
@@ -83,6 +84,7 @@ class UserRegisterView(GenericAPIView):
 # User Otp-verification view----------------------------------------------------------------
         
 class UserOtpVerificationEmail(GenericAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserOtpSerializer
     def post(self, request,input= None, format=None):
         id = input
@@ -118,7 +120,7 @@ class UserOtpVerificationEmail(GenericAPIView):
         
 # User otp-resend view----------------------------------------------------------------
 class UserOtpResend(APIView):
-    
+    permission_classes = [IsAuthenticated] #--
     def get(self, request,input=None,format=None):
       id = input
       email_id = ""
@@ -131,7 +133,7 @@ class UserOtpResend(APIView):
            return Response({
             'status_code': status.HTTP_200_OK,
             'message':"otp sent successfully",
-            'user_id':user_iddd},status=200)
+            'user_id':id},status=200)
        else:
              return Response({
               'status':status.HTTP_200_OK,
@@ -145,7 +147,7 @@ class UserOtpResend(APIView):
           return Response({
             'status_code': status.HTTP_200_OK,
             'message':"otp sent successfully",
-            'user_id':user_iddd
+            'user_id':email_id
           },status=200)
         else:
          return Response({
@@ -167,6 +169,7 @@ class UserOtpResend(APIView):
 
 
 class ForgetPassword(GenericAPIView):
+     permission_classes = [IsAuthenticated]
      serializer_class = ForgetPasswordSerializer
      def post (self, request,input=None,format=None):
        
@@ -200,8 +203,7 @@ class ForgetPassword(GenericAPIView):
 
 
 class UserView(APIView):
-    # permission_classes = [IsManager]
-
+    permission_classes = [IsAuthenticated,IsAdmin]
     def get(self, request, input=None, format=None):
         id = input
         if id is not None:
@@ -235,8 +237,7 @@ class UserView(APIView):
 # user update view----------------------------------------------------------------
         
 class UserUpdateView(APIView):
-    # permission_classes = [IsAuthenticated]
-
+    permission_classes = [IsAuthenticated]
     def patch(self, request, input, format=None):
         id = input
         if User.objects.filter(user_id=id).count() >= 1:
@@ -263,6 +264,7 @@ class UserUpdateView(APIView):
 
 # User login view----------------------------------------------------------------
 class UserLoginView(GenericAPIView):
+   permission_classes = [AllowAny]
    serializer_class = UserLoginSerializer
    def post (self, request,format=None):
       id = request.data.get('id')
@@ -310,6 +312,7 @@ class UserLoginView(GenericAPIView):
 
 
 class UserDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input):
         try:
             _id = input

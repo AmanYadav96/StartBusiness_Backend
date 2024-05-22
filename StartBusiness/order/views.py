@@ -5,9 +5,12 @@ from rest_framework.generics import GenericAPIView
 from cart.models import CartItem
 from order.models import Order
 from order.serializers import OrderSerializer
+from rest_framework.permissions import IsAuthenticated,AllowAny
+from user.customepermission import IsCustomer,DenyForAllUser
 
 # add Order
 class OrderAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = OrderSerializer
     def post(self, request , format=None):
         serializer = OrderSerializer(data=request.data)
@@ -20,6 +23,7 @@ class OrderAddView(GenericAPIView):
         })
   
 class OrderView(APIView):
+    permission_classes = [IsAuthenticated]  #check
     serializer_class = OrderSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -55,6 +59,7 @@ class OrderView(APIView):
 
 
 class OrderViewByUserId(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
     def get(self, request, user_id):
        try:

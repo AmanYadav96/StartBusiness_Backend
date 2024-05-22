@@ -13,9 +13,12 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from category.models import Category
+from user.customepermission import IsAdmin
+from rest_framework.permissions import IsAuthenticated ,AllowAny
 from brand.models import Brand
 # register 01
 class ProductRegisterView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductSerializer
     def post(self,request):
         serializer = ProductSerializer(data=request.data)
@@ -35,6 +38,7 @@ class ProductRegisterView(GenericAPIView):
 
 # View Product Full
 class ProductAllView(ListAPIView):
+    permission_classes = [AllowAny]
     queryset = Product.objects.all().order_by('-created_at')
     serializer_class = ProductFullDetailsSerializer
     pagination_class = CustomPagination
@@ -56,6 +60,7 @@ class ProductAllView(ListAPIView):
     
 
 class ProductView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, input=None, format=None):
         _id = input
         print(_id)
@@ -81,6 +86,7 @@ class ProductView(APIView):
     
 
 class UpdateProductView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductSerializer
     def patch(self, request, input, format=None):
         _id = input
@@ -101,6 +107,7 @@ class UpdateProductView(APIView):
     
 
 class DeleteProductView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input, format=None):
         _id = input
         try:
@@ -124,6 +131,7 @@ class DeleteProductView(APIView):
         
  # Product update media
 class ProductMediaView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductMediaSerializer
     def patch(self,request ,input):
         _id = input
@@ -145,6 +153,7 @@ class ProductMediaView(GenericAPIView):
 
 # Product Details View
 class ProductDetailsView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductDetailsSerializer
     def patch(self,request ,input):
         _id = input
@@ -168,6 +177,7 @@ class ProductDetailsView(GenericAPIView):
 
    # Pricing update
 class PricingView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductPricingSerializer
     def patch(self,request ,input):
         _id = input
@@ -188,6 +198,7 @@ class PricingView(GenericAPIView):
         },status=404)
     # Product update inventory
 class InventoryView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductInventorySerializer
     def patch(self,request ,input):
         _id = input
@@ -211,6 +222,7 @@ class InventoryView(GenericAPIView):
 
     # Product Variants View
 class ProductVariantsView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductVariantsSerializer
     def patch(self,request ,input):
         _id = input
@@ -234,6 +246,7 @@ class ProductVariantsView(GenericAPIView):
 # Product additional information update
     
 class ProductAdditionalView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = AdditionalInfoSerializer
     def patch(self,request ,input):
         _id = input
@@ -255,6 +268,7 @@ class ProductAdditionalView(GenericAPIView):
 
 # Seo info update 
 class SeoInformationView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductSeoSerializer
     def patch(self,request ,input):
         _id = input
@@ -279,6 +293,7 @@ class SeoInformationView(GenericAPIView):
     
 # ---------------------------------------------------------------------
 class BasicProductAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -314,6 +329,7 @@ class BasicProductAllView(APIView):
 
 # media all view
 class ProductMediaAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductMediaSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -348,6 +364,7 @@ class ProductMediaAllView(APIView):
 
 # product details all view
 class OtherDetailsAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductDetailsSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -380,6 +397,7 @@ class OtherDetailsAllView(APIView):
 
 # pricing all view
 class PricingAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductPricingSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -415,6 +433,7 @@ class PricingAllView(APIView):
 # product tax view all
 
 class ProductInventoryAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductInventorySerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -449,6 +468,7 @@ class ProductInventoryAllView(APIView):
         
 
 class ProductVariantsAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductVariantsSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -483,6 +503,7 @@ class ProductVariantsAllView(APIView):
         
 
 class AdditionalInfoAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = AdditionalInfoSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -516,6 +537,7 @@ class AdditionalInfoAllView(APIView):
             }, status=200)
         
 class SeoInfoAllView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductSeoSerializer
     def get(self, request, input=None,format=None):
         _id = input
@@ -551,6 +573,7 @@ class SeoInfoAllView(APIView):
 
 # update category in bulks  
 class UpdateCategoriesInBulk(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = UpdateCategoryBrandInBulkSerializer
     def patch (self,request,format=None):
         
@@ -603,6 +626,7 @@ class UpdateCategoriesInBulk(GenericAPIView):
         )
 # update brands in bulks
 class UpdateBrandsInBulk(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = UpdateCategoryBrandInBulkSerializer
     def patch (self,request,format=None):
         _id = request.data.get('id')
@@ -651,6 +675,7 @@ class UpdateBrandsInBulk(GenericAPIView):
         )
 # update status in bulks
 class UpdateStatusInBulk(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = UpdateStatusIsFeaturedSerializer
     def patch (self,request,format=None):
         status = request.data.get('status')
@@ -697,6 +722,7 @@ class UpdateStatusInBulk(GenericAPIView):
 
 # update created at in bulks
 class UpdateCreatedAtInBulk(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = UpdateCreatedAtSerializer
     def patch (self,request,format=None):
         created_at= request.data.get('created_at')
@@ -741,6 +767,7 @@ class UpdateCreatedAtInBulk(GenericAPIView):
         )
 # update is featured in bulkd
 class UpdateIsFeaturedInBulk(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = UpdateStatusIsFeaturedSerializer
     def patch (self,request,format=None):
         is_featured = request.data.get('status')
@@ -787,7 +814,7 @@ class UpdateIsFeaturedInBulk(GenericAPIView):
         )
 
 class DeleteProductInBulkView(GenericAPIView):
-    
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, format=None):
        
         product_id = request.data.get('product_id')
@@ -822,6 +849,7 @@ class DeleteProductInBulkView(GenericAPIView):
             status=200)  
 
 class ProductIdView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ProductIdSerializer
     def post(self, request, format=None):
         serializer = ProductIdSerializer(data=request.data)
