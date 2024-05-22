@@ -25,7 +25,7 @@ class CompareView(APIView):
        def get (self,request,compare_id):
            try:
                _id = compare_id
-               items  = CompareItem.objects.filter(compare_id=_id)
+               items  = CompareItem.objects.filter(compare_id=_id).order_by('-created_at')
                serializer = CampareItemSerializer(items ,many= True)
                return Response({
                 'status': status.HTTP_200_OK,

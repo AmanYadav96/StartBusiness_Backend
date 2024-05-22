@@ -52,7 +52,7 @@ class CartViewById(APIView):
         _id = request.query_params.get('user_id')
         try:
             cart = Cart.objects.get(user=_id)
-            cart_items = CartItem.objects.filter(cart=cart)
+            cart_items = CartItem.objects.filter(cart=cart).order_by('-created_at')
             serializer = CartViewSerializer(cart_items, many=True)
             return Response({
                 'status': status.HTTP_200_OK,

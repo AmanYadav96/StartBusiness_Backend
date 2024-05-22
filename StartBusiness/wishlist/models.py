@@ -10,5 +10,6 @@ class Wishlist(models.Model):
 
 class WishlistItems(models.Model):
     wishlist_items_id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     wishlist_id = models.ForeignKey(Wishlist,on_delete=models.CASCADE,default=uuid.uuid4)
     product_id = models.ForeignKey(Product,on_delete=models.CASCADE,default=uuid.uuid4)
