@@ -856,10 +856,13 @@ class ProductIdView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         product_ids = serializer.data.get('product_id')
         print(product_ids)
+        
+
         response_data = []
         for _id in product_ids: 
             try:
                 product = Product.objects.get(product_id=_id)
+                print(product.image.url)
                 response_data.append({
                     
                     "product_id": product.product_id,

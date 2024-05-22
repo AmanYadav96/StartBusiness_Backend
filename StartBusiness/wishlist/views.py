@@ -29,7 +29,7 @@ class WishlistViewById(APIView):
        serializer_class = WishlistItemSerializer
        def get (self,request,wishlist_id):
            _id = wishlist_id
-           items  = WishlistItems.objects.filter(wishlist_id=_id)
+           items  = WishlistItems.objects.filter(wishlist_id=_id).order_by('-created_at')
            serializer = WishlistItemSerializer(items ,many= True)
            
            return Response({

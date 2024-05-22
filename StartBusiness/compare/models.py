@@ -13,5 +13,6 @@ class Compare(models.Model):
 
 class CompareItem(models.Model):
     compare_item_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     compare_id = models.ForeignKey(Compare,on_delete=models.CASCADE,default=uuid.uuid4)
     product_id = models.ForeignKey(Product,on_delete=models.CASCADE,default=uuid.uuid4)

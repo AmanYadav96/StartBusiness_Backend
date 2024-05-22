@@ -242,14 +242,14 @@ from google.oauth2 import service_account
     
 # ...
     
-GS_BUCKET_NAME = "snagitamarble" 
+GS_BUCKET_NAME = "snagitamarble2" 
     
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     
 MEDIA_URL = "URL.to.GCS/"
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "sunlit-virtue-415908-be8beac75bad.json"
+    "krishna-project-423910-0657a7f1bdc9.json"
 )
 GS_EXPIRATION = timedelta(minutes=5)
     
