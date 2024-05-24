@@ -2,23 +2,32 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
+from product.models import Product
 from cart.models import CartItem
 from order.models import Order
 from order.serializers import OrderSerializer
 
 # add Order
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
+from .serializers import OrderSerializer
+from .models import Product
+from .tasks import calculate_total_price
 class OrderAddView(GenericAPIView):
     serializer_class = OrderSerializer
-    def post(self, request , format=None):
+    def post(self, request, format=None):
         serializer = OrderSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        order = serializer.save()
+        items = serializer.validated_data.get('items', [])
+        order = serializer.save(total_price=calculate_total_price(items))
         return Response({
-            'status':status.HTTP_201_CREATED,
-            "message":"Order Added Successfully",
+            'status': status.HTTP_201_CREATED,
+            'message': "Order Added Successfully",
             'order': order.order_id
         })
-  
+
 class OrderView(APIView):
     serializer_class = OrderSerializer
     def get(self, request, input=None, format=None):
