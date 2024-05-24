@@ -11,9 +11,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Cart, CartItem
+from user.customepermission import IsCustomer,DenyForAllUser
+from rest_framework.permissions import IsAuthenticated
 
 
 class CartAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = CartItemSerializer 
     def post(self, request):
         serializer = CartItemSerializer(data=request.data)
@@ -27,6 +30,8 @@ class CartAddView(GenericAPIView):
 
 
 class CartView(ListAPIView):
+#    We have to restricted from all
+   permission_classes = [DenyForAllUser]
    queryset = CartItem.objects.all()
    serializer_class = CartViewSerializer
    def list(self, request, *args, **kwargs):
@@ -45,6 +50,7 @@ class CartView(ListAPIView):
 
 
 class CartViewById(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     queryset = CartItem.objects.all()
     serializer_class = CartViewSerializer
 
@@ -67,6 +73,7 @@ class CartViewById(APIView):
 
         
 class CartUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = CartItemSerializer
     def patch(self, request, input, format=None):
         _id = input
@@ -88,6 +95,7 @@ class CartUpdateView(GenericAPIView):
         
 
 class CartDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     def delete(self, request, input):
         _id = input
         try:

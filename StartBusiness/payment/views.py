@@ -7,6 +7,8 @@ from payment.models import Payment
 from rest_framework.generics import GenericAPIView
 from payment.serializers import PaymentSerializer
 from user.models import User
+from rest_framework.permissions import IsAuthenticated
+from user.customepermission import IsCustomer,DenyForAllUser
 # Create your views here.
 
 import requests
@@ -16,6 +18,7 @@ import random
 import string
 
 class PaymentAddView(GenericAPIView):
+   permission_classes = [IsAuthenticated ,IsCustomer]
    serializer_class = PaymentSerializer
    def post(self, request,format=None):
     serializer = PaymentSerializer(data=request.data)
@@ -78,6 +81,7 @@ class PaymentAddView(GenericAPIView):
 
 
 class PaymentView(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = PaymentSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -102,16 +106,25 @@ class PaymentView(APIView):
                     status=404
                 )
         else:
-            payment = Payment.objects.all()
-            serializer = PaymentSerializer(payment, many=True)
-            return Response({
-                 'status': status.HTTP_200_OK,
-                 'message': 'Payment data retrieved successfully',
-                 'data': serializer.data,
-            }, status=200)
+            return Response(
+                {
+                    'status': status.HTTP_403_FORBIDDEN,
+                    'message': "Access forbidden: Customers must provide a payment ID",
+                },
+                status=403
+
+            )
+            # payment = Payment.objects.all()
+            # serializer = PaymentSerializer(payment, many=True)
+            # return Response({
+            #      'status': status.HTTP_200_OK,
+            #      'message': 'Payment data retrieved successfully',
+            #      'data': serializer.data,
+            # }, status=200)
         
 
 class PaymentUpdateView(GenericAPIView):
+    permission_classes = [DenyForAllUser]
     serializer_class = PaymentSerializer
     def patch(self, request, input):
         _id = input
@@ -133,6 +146,7 @@ class PaymentUpdateView(GenericAPIView):
                 status=404)
 
 class PaymentDeleteView(APIView):
+    permission_classes = [DenyForAllUser]
     def delete(self, request, input):
         try:
             _id = input
@@ -173,7 +187,7 @@ class callback(APIView):
         
         
 class PayementResopnse(APIView):
-    
+    permission_classes = [IsAuthenticated,IsCustomer]
     def get(self, request,input, format=None, ):
         id = input
         if Payment.objects.filter(payment_id = id).count()==1:

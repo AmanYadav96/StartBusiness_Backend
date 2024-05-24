@@ -6,8 +6,12 @@ from rest_framework.views import APIView
 from .models import Compare , CompareItem
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from user.customepermission import IsCustomer
 # Create your views here.
+
 class AddToCompareView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = CampareItemSerializer
     def post(self,request,format=None):
         comapre_items = CampareItemSerializer(data=request.data)
@@ -21,6 +25,7 @@ class AddToCompareView(GenericAPIView):
         },status=200)
 
 class CompareView(APIView):
+       permission_classes = [IsAuthenticated,IsCustomer]
        serializer_class = CampareItemSerializer
        def get (self,request,compare_id):
            try:
@@ -41,6 +46,7 @@ class CompareView(APIView):
 
 
 class CompareDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     def delete(self, request, compare_item_id):
         _id = compare_item_id
         try:
@@ -59,6 +65,7 @@ class CompareDeleteView(APIView):
             status=404)
 
 class CompareDeleteAllView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
     def delete(self, request,compare_id):
         _id = compare_id
         try:

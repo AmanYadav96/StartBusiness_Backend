@@ -12,9 +12,12 @@ from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from StartBusiness.s3_image_config import delete_file, upload_base64_file
+from rest_framework.permissions import IsAuthenticated,AllowAny
+from user.customepermission import IsAdmin
 
 
 class CategoryRegisterView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = CategorySerializer
     def post(self, request,format=None):
         serializer = CategorySerializer(data=request.data)
@@ -26,6 +29,7 @@ class CategoryRegisterView(GenericAPIView):
         },status=201)
 
 class CategoryView(ListAPIView):
+   permission_classes = [AllowAny]
    queryset = Category.objects.all().order_by('-created_at')
    serializer_class = CategorySerializer
    pagination_class = CustomPagination
@@ -45,7 +49,7 @@ class CategoryView(ListAPIView):
                },status=200
             )
 class CategoryViewById(APIView):
-    
+    permission_classes = [AllowAny]
     def get(self,request, input = None,format=None):
         id = input
         try:
@@ -65,6 +69,7 @@ class CategoryViewById(APIView):
        
         
 class CategoryUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = CategorySerializer
     def patch(self, request, input, format=None):
         id = input
@@ -86,6 +91,7 @@ class CategoryUpdateView(GenericAPIView):
         
 
 class CategoryDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input):
         id = input
         try:

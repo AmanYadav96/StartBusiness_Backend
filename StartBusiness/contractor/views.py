@@ -5,10 +5,13 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import Contractor
 # Create your  views here.
+from rest_framework.permissions import IsAuthenticated
+from user.customepermission import IsAdmin
 
 class ContractorRegistorView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
+    
     serializer_class = ContractorSerializer
-
     #Creating
     def post(self, request,format=None):
         serializer = ContractorSerializer(data=request.data)
@@ -22,7 +25,7 @@ class ContractorRegistorView(generics.GenericAPIView):
 
     #FindAll
 class ContractorView(APIView):
-
+    permission_classes = [IsAuthenticated,IsAdmin]
     def get(self, request, input = None,format=None):
         id = input
         print(self)
@@ -51,6 +54,7 @@ class ContractorView(APIView):
         
 #Update
 class ContractorUpdateView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = ContractorSerializer
     def patch(self, request, input, format=None):
         id = input
@@ -72,7 +76,7 @@ class ContractorUpdateView(APIView):
             })
 #delete
 class ContratorDeleteView(APIView):
-
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input):
         id = input
         print(self)

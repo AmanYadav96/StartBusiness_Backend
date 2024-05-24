@@ -4,9 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from stock.models import Stock
 from stock.serializers import StockSerializer
+from user.customepermission import IsAdmin
+from rest_framework.permissions import IsAuthenticated,AllowAny
 
 # add stock
 class StockAddView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = StockSerializer
     def post(self, request,format=None):
         serializer = StockSerializer(data=request.data)
@@ -20,6 +23,7 @@ class StockAddView(GenericAPIView):
 
 # update stock
 class StockUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = StockSerializer
     def patch(self, request, input):
         _id = input
@@ -41,6 +45,7 @@ class StockUpdateView(GenericAPIView):
 
 # get stock or get stock by id   
 class StockView(APIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = StockSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -76,6 +81,7 @@ class StockView(APIView):
 
 # delete stock
 class StockDeleteView(APIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
     def delete(self, request, input):
         try:
             _id = input
