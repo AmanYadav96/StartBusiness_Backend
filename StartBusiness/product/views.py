@@ -849,7 +849,7 @@ class DeleteProductInBulkView(GenericAPIView):
             status=200)  
 
 class ProductIdView(GenericAPIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
+    permission_classes = [AllowAny]
     serializer_class = ProductIdSerializer
     def post(self, request, format=None):
         serializer = ProductIdSerializer(data=request.data)
