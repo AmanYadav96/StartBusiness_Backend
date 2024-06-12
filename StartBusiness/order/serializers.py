@@ -21,3 +21,4 @@ class OrderSerializer(serializers.ModelSerializer):
             order_items = [OrderItem(order=order, **item_data) for item_data in items_data]
             OrderItem.objects.bulk_create(order_items)
         return order
+    
