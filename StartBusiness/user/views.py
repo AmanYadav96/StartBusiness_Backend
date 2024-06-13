@@ -203,7 +203,7 @@ class ForgetPassword(GenericAPIView):
 
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
+    permission_classes = [AllowAny]
     def get(self, request, input=None, format=None):
         id = input
         if id is not None:
@@ -277,10 +277,12 @@ class UserLoginView(GenericAPIView):
        
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
-             cart = Cart.objects.get(user_id = user[0].user_id)
-             compare = Compare.objects.get(user_id = user[0].user_id)
-             wishlist = Wishlist.objects.get(user_id=user[0].user_id)
-             return Response({
+             if user[0].user_role == 'Customer':
+              cart = Cart.objects.get(user_id = user[0].user_id)
+              compare = Compare.objects.get(user_id = user[0].user_id)
+              wishlist = Wishlist.objects.get(user_id=user[0].user_id)
+            
+              return Response({
               'status code': status.HTTP_200_OK,
               'message':"user logged in successfully",
               'user_id': user[0].user_id,
@@ -290,6 +292,14 @@ class UserLoginView(GenericAPIView):
               'user_role': user[0].user_role,
               'token': token
                              },status=200)
+             else:
+                  return Response({
+                  'status code': status.HTTP_200_OK,
+                  'message':"user logged in successfully",
+                  'user_id': user[0].user_id,
+                  'user_role': user[0].user_role,
+                  'token': token
+                  },status=200)
          else:
              return Response({'status': status.HTTP_404_BAD_REQUEST,
                               'message':"invalid password"
@@ -312,7 +322,7 @@ class UserLoginView(GenericAPIView):
 
 
 class UserDeleteView(APIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
+    permission_classes = [AllowAny]
     def delete(self, request, input):
         try:
             _id = input
