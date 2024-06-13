@@ -84,7 +84,7 @@ class UserRegisterView(GenericAPIView):
 # User Otp-verification view----------------------------------------------------------------
         
 class UserOtpVerificationEmail(GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = UserOtpSerializer
     def post(self, request,input= None, format=None):
         id = input
@@ -120,7 +120,7 @@ class UserOtpVerificationEmail(GenericAPIView):
         
 # User otp-resend view----------------------------------------------------------------
 class UserOtpResend(APIView):
-    permission_classes = [IsAuthenticated] #--
+    permission_classes = [AllowAny] #--
     def get(self, request,input=None,format=None):
       id = input
       email_id = ""
@@ -169,7 +169,7 @@ class UserOtpResend(APIView):
 
 
 class ForgetPassword(GenericAPIView):
-     permission_classes = [IsAuthenticated]
+     permission_classes = [AllowAny]
      serializer_class = ForgetPasswordSerializer
      def post (self, request,input=None,format=None):
        
