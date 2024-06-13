@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'cart',
     'order',
     'wishlist',
-    'payment'
+    'payment',
+    'invoice',
    
 ]
 
@@ -102,29 +103,29 @@ ASGI_APPLICATION = 'StartBusiness.asgi.application'
 #     }
 # }
 # postgres localhost
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'local_SB',
-#         'USER': 'postgres',
-#         'PASSWORD': '768676',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-
-# Postgres Animal
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'edb_admin',
-        'USER': 'edb_admin',
-        'PASSWORD': '%oB-jE;Wdb0*b"]l',
-        'HOST': 'p-mtq5mwi88c.pg.biganimal.io',
-        'PORT': '5432',
+        'NAME': 'krishnadb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_erbznMFI6oik4jMdSZN',
+        'HOST': 'krishna-myproject456.j.aivencloud.com',
+        'PORT': '23642',
     }
 }
+
+
+# Postgres Animal
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'USER':'admin',
+#         'NAME': 'postgres',
+#         'PASSWORD': 'HmG5FrMQdrZkcvFPm45E5VufdcB15t',
+#         'HOST': 'ap-south-1.cfbeb907-e693-49d5-af93-44d7dae2e8bc.aws.ybdb.io',
+#         'PORT': '5433',
+#     }
+# }
 import redis
 
 

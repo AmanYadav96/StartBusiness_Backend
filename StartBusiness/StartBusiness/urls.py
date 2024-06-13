@@ -4,9 +4,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
 from django.views.generic import TemplateView
-from rest_framework_simplejwt.views import (
-    TokenRefreshView,
-)
+
 
 # 
 get_schema_view = get_schema_view(
@@ -36,7 +34,7 @@ urlpatterns = [
              path('compare/',include('compare.urls')),
              path('wishlist/',include('wishlist.urls')),
              path('payment/',include('payment.urls')),
-             path('refresh/token/', TokenRefreshView.as_view(), name='token_refresh'),
+             path('invoice/',include('invoice.urls')),
              
              
        ]))

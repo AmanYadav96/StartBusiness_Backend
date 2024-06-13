@@ -11,7 +11,7 @@ def calculate_total_price(items):
             print(product_id)
             try:
                 product = Product.objects.get(product_id=product_id.product_id)
-                total_price += product.price * quantity
+                total_price += product.discount_price * quantity
             except Product.DoesNotExist:
                     return Response({
                         'status': status.HTTP_400_BAD_REQUEST,
