@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from order.models import Order
 from category.models import Category
 from payment.models import Payment
 from user.models import User
@@ -22,6 +23,7 @@ class Invoice(models.Model):
     customer_name = models.CharField(max_length=50,blank=True)
     customer_mobile_number = models.CharField(max_length=10,blank=True)
     customer_notes = models.TextField(blank=True)
+    order = models.ForeignKey(Order, default=uuid.uuid4,on_delete=models.CASCADE)
     
 class InvoiceItem(models.Model):
     invoice_item_id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
