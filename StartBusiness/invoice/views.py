@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated,AllowAny
 from user.customepermission import IsAdmin
 from rest_framework.response import Response
 from rest_framework import status
+from StartBusiness.custom_paginations import CustomPagination
 # Create your views here.
 class InvoiceAddView(GenericAPIView):
     permission_classes = [AllowAny]
@@ -65,6 +66,7 @@ class DeleteInvoiceView(APIView):
 class InvoiceView(APIView):
     permission_classes = [AllowAny]
     serializer_class = InvoiceSerializer
+    pagination_class = CustomPagination
     def get(self, request, input=None, format=None):
         _id = input
         print(_id)
@@ -95,3 +97,4 @@ class InvoiceView(APIView):
                  'message': 'Invoice data retrieved successfully',
                  'data': serializer.data,
             }, status=200)
+
