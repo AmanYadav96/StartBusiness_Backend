@@ -9,7 +9,7 @@ from product.models import Product
 class Invoice(models.Model):
     invoice_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     invoice_number = models.CharField(blank=True,max_length=10,editable=False,default='SG11112212')
-    # billing_address = models.TextField(blank=True)
+    billing_address = models.TextField(blank=True)
     invoice_status = models.CharField(blank=True,max_length=50,default='Unpaid')
     shipping_address=models.TextField(blank=True)
     invoice_image = models.FileField(upload_to='invoice/',editable=False)
@@ -31,4 +31,5 @@ class InvoiceItem(models.Model):
     total_price = models.DecimalField(default=0,decimal_places=2,max_digits=10)
     invoice = models.ForeignKey(Invoice,related_name='items',default=uuid.uuid4,on_delete=models.CASCADE)
     product = models.ForeignKey(Product,default=uuid.uuid4,on_delete=models.CASCADE)
+    sub_category = models.CharField(max_length=200,blank=True)
     category = models.ForeignKey(Category,default=uuid.uuid4,on_delete=models.CASCADE)
