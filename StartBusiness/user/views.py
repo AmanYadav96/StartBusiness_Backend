@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated ,AllowAny
 # from StartBusiness.email import send_verification_email
 from .tasks import send_verification_email
 from compare.serializers import CampareSerializer
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # basic used functions ......
@@ -278,28 +279,34 @@ class UserLoginView(GenericAPIView):
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
              if user[0].user_role == 'Customer':
-              cart = Cart.objects.get(user_id = user[0].user_id)
-              compare = Compare.objects.get(user_id = user[0].user_id)
-              wishlist = Wishlist.objects.get(user_id=user[0].user_id)
-            
-              return Response({
-              'status code': status.HTTP_200_OK,
-              'message':"user logged in successfully",
-              'user_id': user[0].user_id,
-              'cart_id': cart.cart_id,
-              'compare_id':compare.compare_id,
-              'wishlist_id':wishlist.wishlist_id,
-              'user_role': user[0].user_role,
-              'token': token
-                             },status=200)
+                try:
+                    cart = Cart.objects.get(user_id=user[0].user_id)
+                    compare = Compare.objects.get(user_id=user[0].user_id)
+                    wishlist = Wishlist.objects.get(user_id=user[0].user_id)
+                    
+                    return Response({
+                        'status code': status.HTTP_200_OK,
+                        'message': "User logged in successfully",
+                        'user_id': user[0].user_id,
+                        'cart_id': cart.cart_id,
+                        'compare_id': compare.compare_id,
+                        'wishlist_id': wishlist.wishlist_id,
+                        'user_role': user[0].user_role,
+                        'token': token
+                    }, status=status.HTTP_200_OK)
+                except ObjectDoesNotExist as e:
+                    return Response({
+                        'status code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        'message': f"An error occurred while fetching user data: {str(e)}"
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
              else:
-                  return Response({
-                  'status code': status.HTTP_200_OK,
-                  'message':"user logged in successfully",
-                  'user_id': user[0].user_id,
-                  'user_role': user[0].user_role,
-                  'token': token
-                  },status=200)
+                            return Response({
+                                'status code': status.HTTP_200_OK,
+                                'message': "User logged in successfully",
+                                'user_id': user[0].user_id,
+                                'user_role': user[0].user_role,
+                                'token': token
+                            }, status=status.HTTP_200_OK)
          else:
              return Response({'status': status.HTTP_404_BAD_REQUEST,
                               'message':"invalid password"
