@@ -17,7 +17,7 @@ import json
 from .customepermission import IsManager , IsAdmin
 from rest_framework.permissions import IsAuthenticated ,AllowAny
 # from StartBusiness.email import send_verification_email
-from .tasks import send_verification_email
+from .tasks import send_verification_email,create
 from compare.serializers import CampareSerializer
 
 
@@ -48,17 +48,17 @@ def time_difference(start_time, end_time, time_format='%H:%M:%S'):
     time_diff = end - start
     return time_diff.seconds/60
 
-def create(user_id):
-     cart = Cart.objects.create(user_id=user_id)
-     cart.save()
-     wishlist = Wishlist.objects.create(user_id=user_id)
-     wishlist.save()
-     print(wishlist.wishlist_id)
-     dt = {'user_id':user_id}
-     serializer = CampareSerializer(data = dt)
-     serializer.is_valid(raise_exception=True)
-     serializer.save()
-     print(serializer)
+# def create(user_id):
+#      cart = Cart.objects.create(user_id=user_id)
+#      cart.save()
+#      wishlist = Wishlist.objects.create(user_id=user_id)
+#      wishlist.save()
+#      print(wishlist.wishlist_id)
+#      dt = {'user_id':user_id}
+#      serializer = CampareSerializer(data = dt)
+#      serializer.is_valid(raise_exception=True)
+#      serializer.save()
+#      print(serializer)
 # views code .................
 
 # User register view --------------------------------

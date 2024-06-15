@@ -2,6 +2,7 @@ from celery import shared_task
 from compare.models import Compare
 from compare.serializers import CampareSerializer
 from cart.models import Cart
+from wishlist.models import Wishlist
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -24,6 +25,19 @@ smtp_username = "sangeetatraders188@gmail.com"
 smtp_password = "ctuvsymsarkuuumg"
 from_email = "sangeetatraders188@gmail.com"
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+@shared_task
+def create(user_id):
+     cart = Cart.objects.create(user_id=user_id)
+     cart.save()
+     wishlist = Wishlist.objects.create(user_id=user_id)
+     wishlist.save()
+     print(wishlist.wishlist_id)
+     dt = {'user_id':user_id}
+     serializer = CampareSerializer(data = dt)
+     serializer.is_valid(raise_exception=True)
+     serializer.save()
+     print(serializer)
 @shared_task
 def send_verification_email(otp,user_email):
     html_content = render_to_string('otp.html', {'otp': otp})
