@@ -106,7 +106,7 @@ class UserOtpVerificationEmail(GenericAPIView):
                     "message":"user is verified"
                 },status=200)
             else:
-                Response.status_code = status.HTTP_404_BAD_REQUEST
+                Response.status_code = status.HTTP_400_BAD_REQUEST
                 return Response({
                     'status': status.HTTP_400_BAD_REQUEST,
                     "message":"invalid otp"
