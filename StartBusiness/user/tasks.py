@@ -26,7 +26,6 @@ smtp_password = "ctuvsymsarkuuumg"
 from_email = "sangeetatraders188@gmail.com"
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-@shared_task
 
 @shared_task
 def send_verification_email(otp,user_email):
