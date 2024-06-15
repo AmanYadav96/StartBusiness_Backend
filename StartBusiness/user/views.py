@@ -298,7 +298,7 @@ class UserLoginView(GenericAPIView):
                     return Response({
                         'status code': status.HTTP_500_INTERNAL_SERVER_ERROR,
                         'message': f"An error occurred while fetching user data: {str(e)}"
-                    }, status=status.HTTP_40)
+                    }, status=status.HTTP_400_BAD_REQUEST)
              else:
                             return Response({
                                 'status code': status.HTTP_200_OK,
