@@ -106,17 +106,17 @@ class UserOtpVerificationEmail(GenericAPIView):
                     "message":"user is verified"
                 },status=200)
             else:
-                Response.status_code = status.HTTP_400_BAD_REQUEST
+                Response.status_code = status.HTTP_404_BAD_REQUEST
                 return Response({
-                    'status': status.HTTP_400_BAD_REQUEST,
+                    'status': status.HTTP_404_BAD_REQUEST,
                     "message":"invalid otp"
-                },status=400)
+                },status=404)
         else:
         
          return Response({
-         'status_code': status.HTTP_400_BAD_REQUEST  ,
+         'status_code': status.HTTP_404_BAD_REQUEST  ,
          "message":"otp expired"
-         },status=400)
+         },status=404)
 
         
 # User otp-resend view----------------------------------------------------------------
@@ -152,15 +152,15 @@ class UserOtpResend(APIView):
           },status=200)
         else:
          return Response({
-              'status':status.HTTP_400_BAD_REQUEST,
+              'status':status.HTTP_404_BAD_REQUEST,
               'message':'user is not registered with this id'
-          },status=400)
+          },status=404)
         
       else:  
           return Response({
-              'status':status.HTTP_400_BAD_REQUEST,
+              'status':status.HTTP_404_BAD_REQUEST,
               'message':'user is not registered with this id'
-          },status=400)
+          },status=404)
       
         
         
@@ -194,9 +194,9 @@ class ForgetPassword(GenericAPIView):
        else:
             
             return Response({
-            'status code': status.HTTP_400_BAD_REQUEST,
+            'status': status.HTTP_404_BAD_REQUEST,
             'message':"user is not registered with this email."         
-               },status=400)
+               },status=404)
 
      
 
@@ -221,9 +221,9 @@ class UserView(APIView):
             else:
                 return Response(
                     {
-                        'status': status.HTTP_400_BAD_REQUEST,
+                        'status': status.HTTP_404_BAD_REQUEST,
                         'message': "Invalid user id",
-                    },status=400
+                    },status=404
                 )
         else:
             user = User.objects.all()    
@@ -257,9 +257,9 @@ class UserUpdateView(APIView):
         else:
             return Response(
                 {
-                    'status': status.HTTP_400_BAD_REQUEST,
+                    'status': status.HTTP_404_BAD_REQUEST,
                     'message': 'invalid id',
-                },status=400
+                },status=404
             )
 
 
@@ -308,23 +308,23 @@ class UserLoginView(GenericAPIView):
                                 'token': token
                             }, status=status.HTTP_200_OK)
          else:
-             return Response({'status': status.HTTP_400_BAD_REQUEST,
+             return Response({'status': status.HTTP_404_BAD_REQUEST,
                               'message':"invalid password"
-                              },status=400)
+                              },status=404)
              
         else:
                  otp_generator(user[0].user_email)
-                 return Response({'status': status.HTTP_400_BAD_REQUEST,
+                 return Response({'status': status.HTTP_404_BAD_REQUEST,
                               'message':"user is not verified first verify yor account",
                               'is_verify': user[0].is_verify,
                               'user_id': user[0].user_id
-                              },status=400)
+                              },status=404)
       else:
         
           return Response({
-              'status code': status.HTTP_400_BAD_REQUEST,
+              'status code': status.HTTP_404_BAD_REQUEST,
               'message':"user is not registered with this email or mobile number"         
-               },status=400)
+               },status=404)
 
 
 
