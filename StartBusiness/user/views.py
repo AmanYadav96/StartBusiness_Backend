@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated ,AllowAny
 # from StartBusiness.email import send_verification_email
 from .tasks import send_verification_email,create
 from compare.serializers import CampareSerializer
+from django.core.exceptions import ObjectDoesNotExist
 
 
 # basic used functions ......
@@ -105,15 +106,15 @@ class UserOtpVerificationEmail(GenericAPIView):
                     "message":"user is verified"
                 },status=200)
             else:
-                Response.status_code = status.HTTP_404_BAD_REQUEST
+                Response.status_code = status.HTTP_400_BAD_REQUEST
                 return Response({
-                    'status': status.HTTP_404_BAD_REQUEST,
+                    'status': status.HTTP_400_BAD_REQUEST,
                     "message":"invalid otp"
                 },status=400)
         else:
         
          return Response({
-         'status_code': status.HTTP_404_BAD_REQUEST  ,
+         'status_code': status.HTTP_400_BAD_REQUEST  ,
          "message":"otp expired"
          },status=400)
 
@@ -151,13 +152,13 @@ class UserOtpResend(APIView):
           },status=200)
         else:
          return Response({
-              'status':status.HTTP_404_BAD_REQUEST,
+              'status':status.HTTP_400_BAD_REQUEST,
               'message':'user is not registered with this id'
           },status=400)
         
       else:  
           return Response({
-              'status':status.HTTP_404_BAD_REQUEST,
+              'status':status.HTTP_400_BAD_REQUEST,
               'message':'user is not registered with this id'
           },status=400)
       
@@ -193,7 +194,7 @@ class ForgetPassword(GenericAPIView):
        else:
             
             return Response({
-            'status code': status.HTTP_404_BAD_REQUEST,
+            'status code': status.HTTP_400_BAD_REQUEST,
             'message':"user is not registered with this email."         
                },status=400)
 
@@ -220,7 +221,7 @@ class UserView(APIView):
             else:
                 return Response(
                     {
-                        'status': status.HTTP_404_BAD_REQUEST,
+                        'status': status.HTTP_400_BAD_REQUEST,
                         'message': "Invalid user id",
                     },status=400
                 )
@@ -256,7 +257,7 @@ class UserUpdateView(APIView):
         else:
             return Response(
                 {
-                    'status': status.HTTP_404_BAD_REQUEST,
+                    'status': status.HTTP_400_BAD_REQUEST,
                     'message': 'invalid id',
                 },status=400
             )
@@ -278,36 +279,42 @@ class UserLoginView(GenericAPIView):
          if(check_password(password,user[0].user_password)):
              token =get_tokens_for_user(user[0])
              if user[0].user_role == 'Customer':
-              cart = Cart.objects.get(user_id = user[0].user_id)
-              compare = Compare.objects.get(user_id = user[0].user_id)
-              wishlist = Wishlist.objects.get(user_id=user[0].user_id)
-            
-              return Response({
-              'status code': status.HTTP_200_OK,
-              'message':"user logged in successfully",
-              'user_id': user[0].user_id,
-              'cart_id': cart.cart_id,
-              'compare_id':compare.compare_id,
-              'wishlist_id':wishlist.wishlist_id,
-              'user_role': user[0].user_role,
-              'token': token
-                             },status=200)
+                try:
+                    cart = Cart.objects.get(user_id=user[0].user_id)
+                    compare = Compare.objects.get(user_id=user[0].user_id)
+                    wishlist = Wishlist.objects.get(user_id=user[0].user_id)
+                    
+                    return Response({
+                        'status code': status.HTTP_200_OK,
+                        'message': "User logged in successfully",
+                        'user_id': user[0].user_id,
+                        'cart_id': cart.cart_id,
+                        'compare_id': compare.compare_id,
+                        'wishlist_id': wishlist.wishlist_id,
+                        'user_role': user[0].user_role,
+                        'token': token
+                    }, status=status.HTTP_200_OK)
+                except ObjectDoesNotExist as e:
+                    return Response({
+                        'status code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                        'message': f"An error occurred while fetching user data: {str(e)}"
+                    }, status=status.HTTP_40)
              else:
-                  return Response({
-                  'status code': status.HTTP_200_OK,
-                  'message':"user logged in successfully",
-                  'user_id': user[0].user_id,
-                  'user_role': user[0].user_role,
-                  'token': token
-                  },status=200)
+                            return Response({
+                                'status code': status.HTTP_200_OK,
+                                'message': "User logged in successfully",
+                                'user_id': user[0].user_id,
+                                'user_role': user[0].user_role,
+                                'token': token
+                            }, status=status.HTTP_200_OK)
          else:
-             return Response({'status': status.HTTP_404_BAD_REQUEST,
+             return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"invalid password"
                               },status=400)
              
         else:
                  otp_generator(user[0].user_email)
-                 return Response({'status': status.HTTP_404_BAD_REQUEST,
+                 return Response({'status': status.HTTP_400_BAD_REQUEST,
                               'message':"user is not verified first verify yor account",
                               'is_verify': user[0].is_verify,
                               'user_id': user[0].user_id
@@ -315,7 +322,7 @@ class UserLoginView(GenericAPIView):
       else:
         
           return Response({
-              'status code': status.HTTP_404_BAD_REQUEST,
+              'status code': status.HTTP_400_BAD_REQUEST,
               'message':"user is not registered with this email or mobile number"         
                },status=400)
 
