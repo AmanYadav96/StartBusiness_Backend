@@ -68,7 +68,7 @@ class OrderView(APIView):
 
 
 class OrderViewByUserId(ListAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated,IsCustomer]
     queryset = Order.objects.all().order_by('-created_at')
     serializer_class = OrderSerializer
     filterset_class = OrderFilter
@@ -109,7 +109,8 @@ class OrderIdView(GenericAPIView):
                         "product_image": order_item.product.image.url,
                         "product_name": order_item.product.name,
                         "product_category": order_item.product.category.category_name,
-                        "customer_name": order_item.order.user.user_name,
+                        "customer_name": order_item.order.address.name,
+                        'payment_info':'Debit card',
                         "price": order_item.order.total_price,
                     })
             except OrderItem.DoesNotExist:
