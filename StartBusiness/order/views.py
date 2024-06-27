@@ -104,14 +104,16 @@ class OrderIdView(GenericAPIView):
                     raise OrderItem.DoesNotExist
                 for order_item in order_items:
                     response_data.append({
+                        "date": order_item.order.created_at,
                         "order_id": order_item.order.order_id,
-                        "order_date": order_item.order.created_at,
-                        "product_image": order_item.product.image.url,
-                        "product_name": order_item.product.name,
-                        "product_category": order_item.product.category.category_name,
+                        "image": order_item.product.image.url,
+                        "product": order_item.product.name,
+                        "category": order_item.product.category.category_name,
                         "customer_name": order_item.order.address.name,
                         'payment_info':'Debit card',
                         "price": order_item.order.total_price,
+                        "status":order_item.order.order_status
+
                     })
             except OrderItem.DoesNotExist:
                 response_data.append({
