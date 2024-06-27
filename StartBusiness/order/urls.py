@@ -7,6 +7,7 @@ urlpatterns = [
     path('view/',OrderView.as_view(), name = 'Order views'),
     path('views/',OrderViewByUserId.as_view(),name='Order views bu userid'),
     path('view/<uuid:input>/',OrderView.as_view(), name = 'Order views single'),
+    path('orderId/',OrderIdView.as_view(), name = 'Order views'),
     
 
 ]
