@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'rest_framework_simplejwt',
     'rest_framework.authtoken',
+    'cloudinary',
+    'cloudinary_storage',
     'drf_yasg',
     'django_filters',
     'channels',
@@ -257,12 +259,16 @@ DJANGO_ALLOW_ASYNC_UNSAFE=True
 # GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
 
 # Appwrite Configuration
-APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'
-APPWRITE_PROJECT_ID = '667d386a003cf0fe7357'
-APPWRITE_API_KEY = 'bfe33f4082d45b5eb145e35f6f71212b58c80443057393072294434ed48d0a1b06c301a886009f0a2aebb379a760ee36e17f9905964fba374f204f0e21f864f413f3b2d900c3e91736e9ba725dd879ed163b4d6477f4becb4596cf66a095b5595e75efae0e6e7aabc182206fabacfd2c98fc216f9bcdaaad0685d011172bf4c7'
-APPWRITE_BUCKET_ID = '667d388d000acee39fce'
 # settings.py
-DEFAULT_FILE_STORAGE = 'storages.backends.appwrite_storage.AppwriteStorageBackend'
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL':'cloudinary://288782735175668:geU7eWiYmQBFDHXJN3_iWia3IJE@dynvzncn2',
+    'CLOUD_NAME': 'dynvzncn2',
+    'API_KEY': '288782735175668',
+    'API_SECRET': 'geU7eWiYmQBFDHXJN3_iWia3IJE'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Optional: Default file storage if you're using a custom storage backend
 # DEFAULT_FILE_STORAGE = 'path.to.your.AppwriteStorageBackend'
