@@ -239,19 +239,30 @@ DJANGO_ALLOW_ASYNC_UNSAFE=True
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # settings.py
-from google.oauth2 import service_account
+# from google.oauth2 import service_account
     
-# ...
+# # ...
     
-GS_BUCKET_NAME = "snagitamarble2" 
+# GS_BUCKET_NAME = "snagitamarble2" 
     
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+# DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     
-MEDIA_URL = "URL.to.GCS/"
+# MEDIA_URL = "URL.to.GCS/"
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "krishna-project-423910-0657a7f1bdc9.json"
-)
-GS_EXPIRATION = timedelta(minutes=5)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     "krishna-project-423910-0657a7f1bdc9.json"
+# )
+# GS_EXPIRATION = timedelta(minutes=5)
     
-GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
+# GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
+
+# Appwrite Configuration
+APPWRITE_ENDPOINT = 'https://cloud.appwrite.io/v1'
+APPWRITE_PROJECT_ID = '667d386a003cf0fe7357'
+APPWRITE_API_KEY = 'bfe33f4082d45b5eb145e35f6f71212b58c80443057393072294434ed48d0a1b06c301a886009f0a2aebb379a760ee36e17f9905964fba374f204f0e21f864f413f3b2d900c3e91736e9ba725dd879ed163b4d6477f4becb4596cf66a095b5595e75efae0e6e7aabc182206fabacfd2c98fc216f9bcdaaad0685d011172bf4c7'
+APPWRITE_BUCKET_ID = '667d388d000acee39fce'
+# settings.py
+DEFAULT_FILE_STORAGE = 'storages.backends.appwrite_storage.AppwriteStorageBackend'
+
+# Optional: Default file storage if you're using a custom storage backend
+# DEFAULT_FILE_STORAGE = 'path.to.your.AppwriteStorageBackend'
