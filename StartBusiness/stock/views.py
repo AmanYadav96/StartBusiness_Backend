@@ -45,7 +45,7 @@ class StockUpdateView(GenericAPIView):
 
 # get stock or get stock by id   
 class StockView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsAdmin]
     serializer_class = StockSerializer
     def get(self, request, input=None, format=None):
         _id = input

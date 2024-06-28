@@ -862,7 +862,6 @@ class ProductIdView(GenericAPIView):
         for _id in product_ids: 
             try:
                 product = Product.objects.get(product_id=_id)
-                print(product.image.url)
                 response_data.append({
                     
                     "product_id": product.product_id,

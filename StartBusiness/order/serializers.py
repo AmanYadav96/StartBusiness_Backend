@@ -22,3 +22,12 @@ class OrderSerializer(serializers.ModelSerializer):
             OrderItem.objects.bulk_create(order_items)
         return order
     
+
+class OrderIdSerializer(serializers.ModelSerializer):
+    order_id = serializers.ListField()
+    class Meta:
+        model = Order
+        fields = ['order_id']
+
+
+    

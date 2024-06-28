@@ -5,18 +5,17 @@ from rest_framework.generics import GenericAPIView,ListAPIView
 from order.filter import OrderFilter
 from product.models import Product
 from cart.models import CartItem
-from order.models import Order
+from order.models import OrderItem,Order
 from order.serializers import OrderSerializer
 from rest_framework.permissions import IsAuthenticated,AllowAny
-from user.customepermission import IsCustomer,DenyForAllUser
+from user.customepermission import IsCustomer,DenyForAllUser,IsAdmin
 
 # add Order
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import OrderSerializer
-from .models import Product
+from .serializers import OrderIdSerializer, OrderSerializer
 from .tasks import calculate_total_price
 class OrderAddView(GenericAPIView):
     permission_classes = [IsAuthenticated,IsCustomer]
@@ -33,7 +32,7 @@ class OrderAddView(GenericAPIView):
         })
 
 class OrderView(APIView):
-    permission_classes = [IsAuthenticated]  #check
+    permission_classes = [IsAuthenticated,IsAdmin]  #check
     serializer_class = OrderSerializer
     def get(self, request, input=None, format=None):
         _id = input
@@ -69,7 +68,7 @@ class OrderView(APIView):
 
 
 class OrderViewByUserId(ListAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated,IsCustomer]
     queryset = Order.objects.all().order_by('-created_at')
     serializer_class = OrderSerializer
     filterset_class = OrderFilter
@@ -87,4 +86,41 @@ class OrderViewByUserId(ListAPIView):
         },status=200)
     
 
+class OrderIdView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
+    serializer_class = OrderIdSerializer
 
+    def post(self, request, format=None):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        order_ids = serializer.validated_data.get('order_id')
+        print(order_ids)
+
+        response_data = []
+        for _id in order_ids:
+            try:
+                order_items = OrderItem.objects.filter(order__order_id=_id)
+                if not order_items.exists():
+                    raise OrderItem.DoesNotExist
+                for order_item in order_items:
+                    response_data.append({
+                        "date": order_item.order.created_at,
+                        "order_id": order_item.order.order_id,
+                        "image": order_item.product.image.url,
+                        "product": order_item.product.name,
+                        "category": order_item.product.category.category_name,
+                        "customer_name": order_item.order.address.name,
+                        'payment_info':'Debit card',
+                        "price": order_item.order.total_price,
+                        "status":order_item.order.order_status
+
+                    })
+            except OrderItem.DoesNotExist:
+                response_data.append({
+                    'order_id': _id,
+                    'error': f"No product found with this order id: {_id}",
+                })
+
+        return Response({
+            'order': response_data,
+        }, status=status.HTTP_200_OK)
