@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView,ListAPIView
+from StartBusiness.custom_paginations import CustomPagination
 from order.filter import OrderFilter
 from product.models import Product
 from cart.models import CartItem
@@ -15,7 +16,7 @@ from user.customepermission import IsCustomer,DenyForAllUser,IsAdmin
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import OrderIdSerializer, OrderSerializer
+from .serializers import OrderSerializer
 from .tasks import calculate_total_price
 class OrderAddView(GenericAPIView):
     permission_classes = [IsAuthenticated,IsCustomer]
@@ -31,39 +32,24 @@ class OrderAddView(GenericAPIView):
             'order': order.order_id
         })
 
-class OrderView(APIView):
-    permission_classes = [IsAuthenticated,IsAdmin]  #check
+class OrderAllView(ListAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
+    queryset = Order.objects.all().order_by('-created_at')
+    pagination_class = CustomPagination
     serializer_class = OrderSerializer
-    def get(self, request, input=None, format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
-            try:
-                order  = Order.objects.get(order_id=_id)
-                serializer = OrderSerializer(order)
-                return Response(
-                    {
-                        'status': status.HTTP_200_OK,
-                        'message': 'Order data retrieved successfully',
-                        'data': serializer.data,
-                    }, status=200
-                )
-            except Order.DoesNotExist:
-                return Response(
-                    {
-                        'status':  status.HTTP_404_NOT_FOUND,
-                        'message': "Order data not found",
-                    },
-                    status=404
-                )
-        else:
-            order = Order.objects.all().order_by('-created_at')
-            serializer = OrderSerializer(order, many=True)
+    filterset_class = OrderFilter
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        if response.data == []:
             return Response({
-                 'status': status.HTTP_200_OK,
-                 'message': 'Order data retrieved successfully',
-                 'data': serializer.data,
-            }, status=200)
+                'status':status.HTTP_404_NOT_FOUND,
+                "message":"No Data Found!!"
+            },status=404)
+        return Response({
+            'status':status.HTTP_200_OK,
+            "message":'Order data retrieved successfully ',
+            'data':response.data
+        },status=200)
         
 
 
@@ -84,43 +70,4 @@ class OrderViewByUserId(ListAPIView):
             'message':'Order data retrieved successfully ',
             'data':response.data
         },status=200)
-    
 
-class OrderIdView(GenericAPIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
-    serializer_class = OrderIdSerializer
-
-    def post(self, request, format=None):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        order_ids = serializer.validated_data.get('order_id')
-        print(order_ids)
-
-        response_data = []
-        for _id in order_ids:
-            try:
-                order_items = OrderItem.objects.filter(order__order_id=_id)
-                if not order_items.exists():
-                    raise OrderItem.DoesNotExist
-                for order_item in order_items:
-                    response_data.append({
-                        "date": order_item.order.created_at,
-                        "order_id": order_item.order.order_id,
-                        "image": order_item.product.image.url,
-                        "product": order_item.product.name,
-                        "category": order_item.product.category.category_name,
-                        "customer_name": order_item.order.address.name,
-                        'payment_info':'Debit card',
-                        "price": order_item.order.total_price,
-                        "status":order_item.order.order_status
-
-                    })
-            except OrderItem.DoesNotExist:
-                response_data.append({
-                    'order_id': _id,
-                    'error': f"No product found with this order id: {_id}",
-                })
-
-        return Response({
-            'order': response_data,
-        }, status=status.HTTP_200_OK)

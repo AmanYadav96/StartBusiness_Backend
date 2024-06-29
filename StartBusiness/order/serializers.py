@@ -23,11 +23,6 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
     
 
-class OrderIdSerializer(serializers.ModelSerializer):
-    order_id = serializers.ListField()
-    class Meta:
-        model = Order
-        fields = ['order_id']
 
 
     
