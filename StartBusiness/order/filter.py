@@ -16,6 +16,7 @@ class StatusFilter(filters.BaseInFilter):
 class OrderFilter(FilterSet):
     order_status = StatusFilter()
     created_at = filters.DateFromToRangeFilter(field_name='created_at')
+    customer_name = filters.CharFilter(field_name='address__name', lookup_expr='icontains')
     class Meta:
         model = Order
-        fields = ['user','order_status','created_at']
+        fields = ['user','order_status','created_at','customer_name']
