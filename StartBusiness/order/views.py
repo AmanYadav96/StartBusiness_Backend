@@ -16,7 +16,7 @@ from user.customepermission import IsCustomer,DenyForAllUser,IsAdmin
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
-from .serializers import OrderIdSerializer, OrderSerializer
+from .serializers import OrderSerializer
 from .tasks import calculate_total_price
 class OrderAddView(GenericAPIView):
     permission_classes = [IsAuthenticated,IsCustomer]

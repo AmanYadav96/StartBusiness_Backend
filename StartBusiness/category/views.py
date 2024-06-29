@@ -17,7 +17,7 @@ from user.customepermission import IsAdmin
 
 
 class CategoryRegisterView(GenericAPIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
+    permission_classes = [AllowAny]
     serializer_class = CategorySerializer
     def post(self, request,format=None):
         serializer = CategorySerializer(data=request.data)
