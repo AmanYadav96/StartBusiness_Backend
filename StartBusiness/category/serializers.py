@@ -11,7 +11,7 @@ class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubCategorySerializer(many=True)
     class Meta:
         model = Category
-        fields = '__all__'
+        fields = ['category_id','category_name','category_image','is_active','subcategories','is_active','created_at','updated_at']
 
     def create(self, validated_data):
         items_data = validated_data.pop('subcategories')
