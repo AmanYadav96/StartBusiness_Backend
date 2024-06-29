@@ -5,7 +5,7 @@ from category.models import Category
 from payment.models import Payment
 from user.models import User
 from product.models import Product
-
+from django.contrib.postgres.fields import ArrayField
 
 class Invoice(models.Model):
     invoice_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -24,14 +24,5 @@ class Invoice(models.Model):
     customer_mobile_number = models.CharField(max_length=10,blank=True)
     customer_notes = models.TextField(blank=True)
     order = models.ForeignKey(Order, default=uuid.uuid4,on_delete=models.CASCADE)
+    items = ArrayField(models.CharField(max_length=10000),null=True)
     
-class InvoiceItem(models.Model):
-    invoice_item_id = models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
-    quantity = models.PositiveIntegerField(default=1)
-    price = models.PositiveBigIntegerField(default=0)
-    discount_price = models.PositiveBigIntegerField(default=0)
-    total_price = models.DecimalField(default=0,decimal_places=2,max_digits=10)
-    invoice = models.ForeignKey(Invoice,related_name='items',default=uuid.uuid4,on_delete=models.CASCADE)
-    product = models.ForeignKey(Product,default=uuid.uuid4,on_delete=models.CASCADE)
-    sub_category = models.CharField(max_length=200,blank=True)
-    category = models.ForeignKey(Category,default=uuid.uuid4,on_delete=models.CASCADE)
