@@ -80,7 +80,7 @@ class CategoryUpdateView(GenericAPIView):
            serializer.save()
            return Response({
                 'status': status.HTTP_200_OK,
-                'message': 'category Updated Successfully'  
+                'message': 'category Updated Successfully'
                 },status=200)
         except Category.DoesNotExist:
             return Response({

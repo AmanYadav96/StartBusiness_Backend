@@ -22,3 +22,7 @@ class OrderSerializer(serializers.ModelSerializer):
             OrderItem.objects.bulk_create(order_items)
         return order
     
+
+
+
+    

@@ -7,7 +7,7 @@ from payment.models import Payment
 from rest_framework.generics import GenericAPIView
 from payment.serializers import PaymentSerializer
 from user.models import User
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from user.customepermission import IsCustomer,DenyForAllUser
 # Create your views here.
 
@@ -167,7 +167,7 @@ class PaymentDeleteView(APIView):
     
    
 class callback(APIView):
- 
+    permission_classes = [AllowAny]
     def post(self, request,format=None):
         callback_dict = request.data['data']
         link_id = callback_dict['order']['order_tags']['link_id']

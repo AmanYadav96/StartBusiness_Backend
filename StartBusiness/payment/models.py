@@ -8,8 +8,8 @@ from order.models import Order
 class Payment(models.Model):
     payment_id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, default=uuid.uuid4,  on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,default=uuid.uuid4)
+    order = models.ForeignKey(Order, default=uuid.uuid4,on_delete=models.CASCADE)
     payment_method = models.CharField(max_length=50)
     transaction_id = models.CharField(max_length=100, unique=True,null=True)
     status = models.CharField(max_length=20, default='pending')

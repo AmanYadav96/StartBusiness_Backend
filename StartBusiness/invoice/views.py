@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView,ListAPIView
+from invoice.filter import InvoiceFilter
 from invoice.models import Invoice
 from rest_framework.views import APIView
 from invoice.serializers import InvoiceSerializer
@@ -63,21 +64,36 @@ class DeleteInvoiceView(APIView):
             },
             status=404)
         
+class InvoiceAllView(ListAPIView):
+    permission_classes = [AllowAny]
+    queryset = Invoice.objects.all().order_by('-created_at')
+    pagination_class = CustomPagination
+    serializer_class = InvoiceSerializer
+    filterset_class = InvoiceFilter
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        if response.data == []:
+            return Response({
+                'status':status.HTTP_404_NOT_FOUND,
+                "message":"No Data Found!!"
+            },status=404)
+        return Response({
+            'status':status.HTTP_200_OK,
+            "message":'Invoice data retrieved successfully ',
+            'data':response.data
+        },status=200)
+
 class InvoiceView(APIView):
     permission_classes = [AllowAny]
-    serializer_class = InvoiceSerializer
-    pagination_class = CustomPagination
     def get(self, request, input=None, format=None):
-        _id = input
-        print(_id)
-        if _id is not None:
+            _id = input
             try:
                 invoice  = Invoice.objects.get(invoice_id=_id)
                 serializer = InvoiceSerializer(invoice)
                 return Response(
                     {
                         'status': status.HTTP_200_OK,
-                        'message': 'Invoice data retrieved successfully',
+                        'message': "Invoice " + 'data retrieved successfully',
                         'data': serializer.data,
                     }, status=200
                 )
@@ -85,16 +101,7 @@ class InvoiceView(APIView):
                 return Response(
                     {
                         'status':  status.HTTP_404_NOT_FOUND,
-                        'message': "Invoice data not found",
+                        'message': "Invoice not found",
                     },
                     status=404
-                )
-        else:
-            invoice = Invoice.objects.all()
-            serializer = InvoiceSerializer(invoice, many=True)
-            return Response({
-                 'status': status.HTTP_200_OK,
-                 'message': 'Invoice data retrieved successfully',
-                 'data': serializer.data,
-            }, status=200)
-
+                ) 

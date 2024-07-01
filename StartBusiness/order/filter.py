@@ -5,7 +5,7 @@ from django_filters import rest_framework as filters
 
 class StatusFilter(filters.BaseInFilter):
     lookup_type = filters.MultipleChoiceFilter
-    choices = (('Pending', 'Pending'), ('Placed', 'Placed'))
+    choices = (('Pending', 'Pending'), ('Placed', 'Placed'),('Cancelled', 'Cancelled'),('Completed', 'Completed')) 
 
     def filter_queryset(self, queryset, value):
         if value:
@@ -15,6 +15,8 @@ class StatusFilter(filters.BaseInFilter):
 
 class OrderFilter(FilterSet):
     order_status = StatusFilter()
+    created_at = filters.DateFromToRangeFilter(field_name='created_at')
+    customer_name = filters.CharFilter(field_name='address__name', lookup_expr='icontains')
     class Meta:
         model = Order
-        fields = ['user','order_status']
+        fields = ['user','order_status','created_at','customer_name']
