@@ -16,7 +16,7 @@ import json
 import uuid
 import random
 import string
-
+# IsAuthenticated ,IsCustomer
 class PaymentAddView(GenericAPIView):
    permission_classes = [IsAuthenticated ,IsCustomer]
    serializer_class = PaymentSerializer
@@ -39,6 +39,9 @@ class PaymentAddView(GenericAPIView):
         'send_sms': True,
         'send_email': True
     },
+    "link_meta": {
+     "return_url": "https://sangeetamarbles.netlify.app/profileinfo/myorders",
+        },
     'link_id':random_number,
     'link_amount': request.data['amount'],
     'link_currency': 'INR',
