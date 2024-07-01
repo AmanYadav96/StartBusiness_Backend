@@ -181,9 +181,9 @@ class callback(APIView):
         
         return Response({
             
-            'status':status.HTTP_201_CREATED,
+            'status':status.HTTP_200_OK,
             "msg":request.data,
-        },status=201)
+        },status=200)
         
         
         
