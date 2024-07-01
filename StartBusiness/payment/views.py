@@ -40,7 +40,7 @@ class PaymentAddView(GenericAPIView):
         'send_email': True
     },
     "link_meta": {
-     "return_url": "https://sangeetamarbles.netlify.app/profileinfo/myorders",
+     "return_url": "http://localhost:5173/profileinfo/myorders/?redirect=true",
         },
     'link_id':random_number,
     'link_amount': request.data['amount'],
