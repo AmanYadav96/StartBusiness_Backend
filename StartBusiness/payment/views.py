@@ -169,6 +169,7 @@ class PaymentDeleteView(APIView):
 class callback(APIView):
     permission_classes = [AllowAny]
     def post(self, request,format=None):
+        print(request.data)
         callback_dict = request.data['data']
         link_id = callback_dict['order']['order_tags']['link_id']
         payment = Payment.objects.get(link_id = link_id)
