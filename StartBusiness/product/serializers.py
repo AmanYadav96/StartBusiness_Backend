@@ -89,7 +89,7 @@ class UpdateCreatedAtSerializer(serializers.ModelSerializer):
 class ProductCartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['product_id','brand','name','image','length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit','price','discount','discount_price','status','category']
+        fields = ['product_id','brand','min_order_quantity','name','image','length','length_unit','width','width_unit','thickness','thickness_unit','weight','weight_unit','price','discount','discount_price','status','category']
 
 class ProductIdSerializer(serializers.ModelSerializer):
     product_id = serializers.ListField()

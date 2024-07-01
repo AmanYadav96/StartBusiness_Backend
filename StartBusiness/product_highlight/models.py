@@ -19,4 +19,3 @@ class ProductHighlight(models.Model):
     update_key = models.BooleanField(default=True)
     product = models.OneToOneField(Product, default=uuid.uuid4, unique=True, on_delete=models.CASCADE)
     
-
