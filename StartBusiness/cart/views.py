@@ -113,7 +113,25 @@ class CartDeleteView(APIView):
             },
             status=400)
 
-
+class CartDeleteAllView(APIView):
+    permission_classes = [IsAuthenticated,IsCustomer]
+    def delete(self, request,cart_id):
+        _id = cart_id
+        try:
+            cart = CartItem.objects.filter(cart_id=_id)
+            for i in cart:
+                i.delete()
+            return Response({
+            'status': status.HTTP_200_OK,
+             'message': 'Cart All Item Deleted Successfully' 
+            },
+            status=200)
+        except CartItem.DoesNotExist:
+            return Response({
+             'status': status.HTTP_404_NOT_FOUND,
+             'message': 'invalid cart_id',
+            },
+            status=404)
 
 
 
