@@ -169,6 +169,7 @@ class PaymentDeleteView(APIView):
 class callback(APIView):
     permission_classes = [AllowAny]
     def post(self, request,format=None):
+        print(request.data)
         callback_dict = request.data['data']
         link_id = callback_dict['order']['order_tags']['link_id']
         payment = Payment.objects.get(link_id = link_id)
@@ -180,9 +181,9 @@ class callback(APIView):
         
         return Response({
             
-            'status':status.HTTP_201_CREATED,
+            'status':status.HTTP_200_OK,
             "msg":request.data,
-        },status=201)
+        },status=200)
         
         
         
