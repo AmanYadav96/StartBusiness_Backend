@@ -29,6 +29,9 @@ class User(AbstractBaseUser):
     user_role = models.CharField(max_length=225 , default='customer')
     otp_key = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    last_name = models.CharField(max_length=225,null=True)
+    gender = models.CharField(choices=(('Male','Male'),('Female','Female'),('Other','Other')),max_length=10,default='Male')
+
     objects = UserManager()
 
     USERNAME_FIELD = "user_email"

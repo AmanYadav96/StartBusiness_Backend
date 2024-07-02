@@ -7,12 +7,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ['product_id','name','category','brand','country_of_origin','description','counter']
 
-# class ProductVideoSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = Product
-#         fields = ['name','description','category','brand','sku','country_of_origin']
-
-# Serielizer for getting full details 
 class ProductFullDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product

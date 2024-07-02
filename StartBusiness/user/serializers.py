@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ('otp_key','created_at','user_name','password','last_login')
+        exclude = ('otp_key','created_at','password','last_login')
 
 
 class UserLoginSerializer(serializers.ModelSerializer):

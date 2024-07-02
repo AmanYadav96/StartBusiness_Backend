@@ -42,7 +42,6 @@ def otp_generator(id):
   
 
 
-
 def time_difference(start_time, end_time, time_format='%H:%M:%S'):
     start = datetime.strptime(start_time, time_format)
     end = datetime.strptime(end_time, time_format)
