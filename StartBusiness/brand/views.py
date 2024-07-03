@@ -64,7 +64,7 @@ class BrandAllView(ListAPIView):
         },status=200)
 
 class BrandView(APIView):
-    permission_classes = [IsAuthenticated,IsAdmin]
+    permission_classes = [AllowAny]
     def get(self, request, input=None, format=None):
             _id = input
             try:
