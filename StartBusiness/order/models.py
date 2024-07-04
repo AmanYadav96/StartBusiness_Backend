@@ -12,6 +12,7 @@ class Order(models.Model):
     total_price = models.PositiveBigIntegerField(default=0)
     user = models.ForeignKey(User,default=uuid.uuid4,on_delete=models.CASCADE)
     address = models.ForeignKey(Address,default=uuid.uuid4,on_delete=models.CASCADE)
+    payment_info = models.CharField(max_length = 100,null=True,blank=True)
 
 
 class OrderItem(models.Model):

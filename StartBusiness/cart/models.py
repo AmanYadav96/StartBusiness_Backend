@@ -15,5 +15,5 @@ class CartItem(models.Model):
     count = models.PositiveBigIntegerField(default=0)
     total_amount = models.PositiveBigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE) 
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,default=uuid.uuid4)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,default=uuid.uuid4) 

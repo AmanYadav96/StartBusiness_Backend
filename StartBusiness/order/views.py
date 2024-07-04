@@ -1,23 +1,17 @@
-from rest_framework.response import Response
+from order.filter import OrderFilter
+from order.models import Order
+from order.serializers import OrderSerializer
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView,ListAPIView
-from StartBusiness.custom_paginations import CustomPagination
-from order.filter import OrderFilter
-from product.models import Product
-from cart.models import CartItem
-from order.models import OrderItem,Order
-from order.serializers import OrderSerializer
-from rest_framework.permissions import IsAuthenticated,AllowAny
-from user.customepermission import IsCustomer,DenyForAllUser,IsAdmin
-
-# add Order
-
-from rest_framework import status
+from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.generics import GenericAPIView
+from user.customepermission import IsAdmin, IsCustomer
+from StartBusiness.custom_paginations import CustomPagination
 from .serializers import OrderSerializer
 from .tasks import calculate_total_price
+
+# add Order
 class OrderAddView(GenericAPIView):
     permission_classes = [IsAuthenticated,IsCustomer]
     serializer_class = OrderSerializer
@@ -32,6 +26,29 @@ class OrderAddView(GenericAPIView):
             'order': order.order_id
         })
 
+# order update by order_id
+class OrderUpdateView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
+    serializer_class = OrderSerializer
+    def patch(self, request, order_id, format=None):
+      _id = order_id
+      try:
+            print(_id)
+            order = Order.objects.get(order_id=_id)
+            serializer = OrderSerializer(order, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({
+             'status': status.HTTP_200_OK,
+             'message': "order updated successfully"
+        },status=200)
+      except Order.DoesNotExist:
+            return Response({
+                 'status': status.HTTP_404_NOT_FOUND,
+                'message':'order id not found'
+        },status=404)
+
+# get all order
 class OrderAllView(ListAPIView):
     permission_classes = [IsAuthenticated,IsAdmin]
     queryset = Order.objects.all().order_by('-created_at')
@@ -52,7 +69,7 @@ class OrderAllView(ListAPIView):
         },status=200)
         
 
-
+# get all order by particular user
 class OrderViewByUserId(ListAPIView):
     permission_classes = [IsAuthenticated,IsCustomer]
     queryset = Order.objects.all().order_by('-created_at')
@@ -71,3 +88,25 @@ class OrderViewByUserId(ListAPIView):
             'data':response.data
         },status=200)
 
+
+# get order by order_id
+class OrderView(GenericAPIView):
+    permission_classes = [IsAuthenticated,IsAdmin]
+    serializer_class = OrderSerializer
+    def get(self, request, order_id, format=None):
+        _id = order_id
+        try:
+            order = Order.objects.get(order_id=_id)
+            serializer = OrderSerializer(order)
+            return Response({
+                'status': status.HTTP_200_OK,
+                'message': "order retrieved successfully",
+                'data': serializer.data
+                },status=200)
+        except Order.DoesNotExist:
+            return Response({
+                'status': status.HTTP_404_NOT_FOUND,
+                'message':'order id not found'
+                },status=404)
+
+           
