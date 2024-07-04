@@ -240,19 +240,28 @@ DJANGO_ALLOW_ASYNC_UNSAFE=True
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # settings.py
-from google.oauth2 import service_account
+# from google.oauth2 import service_account
     
-# ...
+# # ...
     
-GS_BUCKET_NAME = "snagitamarble2" 
+# GS_BUCKET_NAME = "snagitamarble2" 
     
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+# DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     
-MEDIA_URL = "URL.to.GCS/"
+# MEDIA_URL = "URL.to.GCS/"
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "krishna-project-423910-0657a7f1bdc9.json"
-)
-GS_EXPIRATION = timedelta(minutes=5)
+# GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+#     "krishna-project-423910-0657a7f1bdc9.json"
+# )
+# GS_EXPIRATION = timedelta(minutes=5)
     
-GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
+# GS_BLOB_CHUNK_SIZE = 1024 * 256 * 40
+
+CLOUDINARY_STORAGE = {
+    'CLOUDINARY_URL':'cloudinary://288782735175668:geU7eWiYmQBFDHXJN3_iWia3IJE@dynvzncn2',
+    'CLOUD_NAME': 'dynvzncn2',
+    'API_KEY': '288782735175668',
+    'API_SECRET': 'geU7eWiYmQBFDHXJN3_iWia3IJE'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
