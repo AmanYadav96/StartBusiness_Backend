@@ -23,7 +23,7 @@ class User(AbstractBaseUser):
     user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user_email = models.EmailField(max_length=225, unique=True)
     user_mobile_number = models.CharField(max_length=225, unique=True)
-    user_name = models.CharField(max_length=225)
+    user_name = models.CharField(max_length=225,null=True)
     user_password = models.CharField(max_length=225)
     is_verify = models.BooleanField(default=False)
     user_role = models.CharField(max_length=225 , default='customer')
