@@ -147,7 +147,7 @@ class UserOtpResend(APIView):
           return Response({
             'status_code': status.HTTP_200_OK,
             'message':"otp sent successfully",
-            'user_id':email_id
+            'user_id':user_iddd
           },status=200)
         else:
          return Response({
