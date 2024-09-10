@@ -230,6 +230,26 @@ REST_FRAMEWORK = {
 DJANGO_ALLOW_ASYNC_UNSAFE=True
 
 
+CACHE_TTL = 60 * 1500
+import redis
+
+# r = redis.Redis(
+#   host='redis-18755.c16.us-east-1-3.ec2.redns.redis-cloud.com',
+#   port=18755,
+#   password='XmKdA05qIKuC4HoCyZ39YkLlFNdCl0mK')
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://default:XmKdA05qIKuC4HoCyZ39YkLlFNdCl0mK@redis-18755.c16.us-east-1-3.ec2.redns.redis-cloud.com:18755',
+        # 'LOCATION': 'redis://127.0.0.1:6379/1', 
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',  # Optional, JSON serializer
+        }
+    }
+}
+
+
 #AWS_CREDINTIALS
 
 # AWS_ACCESS_KEY_ID = 'AKIAYYNHA3KRGX66HUTL'

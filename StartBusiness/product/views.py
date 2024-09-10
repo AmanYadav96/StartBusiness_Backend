@@ -4,6 +4,10 @@ from rest_framework.generics import GenericAPIView,ListAPIView
 from rest_framework.response import Response
 from product.filter import ProductFilter
 from StartBusiness.s3_image_config import delete_file
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from product.serializers import *
 from .models import Product
 from rest_framework.views import APIView
@@ -16,6 +20,9 @@ from category.models import Category
 from user.customepermission import IsAdmin
 from rest_framework.permissions import IsAuthenticated ,AllowAny
 from brand.models import Brand
+
+CACHE_TTL =getattr(settings, 'CACHE_TTL',DEFAULT_TIMEOUT)
+
 # register 01
 class ProductRegisterView(GenericAPIView):
     permission_classes = [IsAuthenticated,IsAdmin]
@@ -38,15 +45,31 @@ class ProductRegisterView(GenericAPIView):
 
 # View Product Full
 class ProductAllView(ListAPIView):
+    queryset = None
     permission_classes = [AllowAny]
-    queryset = Product.objects.all().order_by('-created_at')
+    # if cache.get("all data"):
+    #     queryset = cache.get("all data")
+    #     print("data from cache")
+    # else:
+    #  queryset = Product.objects.all().order_by('-created_at')
+    #  cache.set("all data",queryset)
+    #  print("data from dbh")
+    queryset = Product.objects.all()
     serializer_class = ProductFullDetailsSerializer
     pagination_class = CustomPagination
     filterset_class = ProductFilter
     ordering_fields = ['created_at']
     def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
-        if response.data == []:
+        response = None
+        if cache.get("all products data"):
+           response = cache.get("all products data")
+           print("data from cache")
+        else:
+           responsee = super().list(request, *args, **kwargs)
+           response = responsee.data
+           cache.set("all products data",response)
+           print("data from db")
+        if response == []:
             return Response({
                 'status':status.HTTP_404_NOT_FOUND,
                 'message':'Data not found!!'
@@ -54,9 +77,34 @@ class ProductAllView(ListAPIView):
         return Response({
             'status':status.HTTP_200_OK,
             'message':'product data retrieved successfully ',
-            'data':response.data
+            'data':response
         },status=200)
 
+
+# class ProductViewallcache(APIView):
+#     permission_classes = [AllowAny]
+#     def get(self, request,  format=None):
+#             data = None
+#             if cache.get("all data"):
+             
+#                 data = cache.get("all data")
+#                 print(cache.get("all data"))
+#                 print("data from cache")
+#             else:    
+#              products = Product.objects.all()
+#              serializer = ProductFullDetailsSerializer(products,many=True)
+#              data = serializer.data
+#             #  print(data)
+#              cache.set("all data",data)
+             
+#              print("data from db")
+#             return Response(
+#                     {
+#                         'status':  status.HTTP_404_NOT_FOUND,
+#                         'message':data,
+#                     },
+#                     status=400
+#         )
     
 
 class ProductView(APIView):
@@ -64,14 +112,24 @@ class ProductView(APIView):
     def get(self, request, input=None, format=None):
         _id = input
         print(_id)
+        data = None
+       
         try:
-            product  = Product.objects.get(product_id=_id)
-            serializer = ProductFullDetailsSerializer(product)
-            return Response(
+             if cache.get(_id):
+                data = cache.get(_id)
+                print(cache.get(_id))
+                print("data come from cache")
+             else:
+               product  = Product.objects.get(product_id=_id)
+               serializer = ProductFullDetailsSerializer(product)
+               data = serializer.data 
+               cache.set(_id,data)
+               print("data come from db")
+             return Response(
                 {
                     'status': 'success',
                     'message': 'Product data retrieved successfully',
-                    'data': serializer.data,
+                    'data': data,
                 }, status=200
             )
         except Product.DoesNotExist:
