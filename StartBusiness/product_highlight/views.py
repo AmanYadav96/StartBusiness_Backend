@@ -10,6 +10,10 @@ from product_highlight.models import ProductHighlight
 from product_highlight.serializers import ProductHighlightSerializer
 from user.customepermission import IsAdmin
 from rest_framework.permissions import IsAuthenticated,AllowAny
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 
 # add product highlight
@@ -64,14 +68,29 @@ class ProductHighlightAllView(ListAPIView):
                 category_ids.append(category_uuid)
             except ValueError:
                 pass
-        response = super().list(request, *args, **kwargs)
+        response = None
+        if cache.get("all products data"):
+           response = cache.get("all products data")
+           print("data from cache")
+        else:
+           responsee = super().list(request, *args, **kwargs)
+           response = responsee.data
+           cache.set("all products data",response)
+           print("data from db")
+       
         best_seller = request.query_params.get('best_seller','')
         if best_seller=='true':
             if category_ids:
+                data = None
                 print(category_ids)
-                queryset = Product.objects.filter(producthighlight__best_seller=True,category__in=category_ids).distinct()
-                serializer = self.get_serializer(queryset, many=True)
-                data = serializer.data
+                if cache.get("best_seller"):
+                    data = cache.get("best_seller")
+                else:
+                    queryset = Product.objects.filter(producthighlight__best_seller=True,category__in=category_ids).distinct()
+                    serializer = self.get_serializer(queryset, many=True)
+                    
+                    cache.set("best_seller",serializer.data)
+                    data = serializer.data
                 return Response({
                 'status': 200,
                 'message': 'Products filtered by category IDs successfully.',
@@ -80,12 +99,12 @@ class ProductHighlightAllView(ListAPIView):
             return Response({
                 'status':status.HTTP_200_OK,
                 'message':'product highlight data retrieved successfully ',
-                'data':response.data
+                'data':response
             },status=200)
         return Response({
                 'status':status.HTTP_200_OK,
                 'message':'product highlight data retrieved successfully ',
-                'data':response.data
+                'data':response
             },status=200)
     
 #  get product highlight by id 
